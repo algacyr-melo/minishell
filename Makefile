@@ -4,15 +4,15 @@ SRCS	= main.c
 
 OBJS	= $(SRCS:.c=.o)
 
-CFLAGS	= -Wall -Wextra -Werror -g
+CFLAGS	= -Wall -Wextra -Werror
 
-CC		= gcc
+CC		= cc
 
 $(NAME)	: $(OBJS) minishell.h
-	$(CC) $(CFLAGS) $(OBJS) -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -o $(NAME)
 
 %.o		: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -I/Users/$(USER)/.brew/Cellar/readline/8.2.1/include -o $@
 
 all		: $(NAME)
 
