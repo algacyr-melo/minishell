@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/06 13:44:03 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/07 15:49:59 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,7 @@
 # include <readline/history.h>
 
 # include <signal.h>
+
+void	set_signal_handler(void);
 
 #endif
