@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/06 14:51:02 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/07 15:33:10 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,25 @@ void	sigint_handler()
 	rl_redisplay();
 }
 
-int	main(void)
+void	set_signal_handler(void)
 {
-	char				*input;
 	struct sigaction	sigint_act;
 	struct sigaction	sigquit_act;
-	struct sigaction	eof_act;
 
 	sigint_act.sa_handler = sigint_handler;
 	sigaction(SIGINT, &sigint_act, NULL);
 
 	sigquit_act.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sigquit_act, NULL);
+}
 
-	eof_act.sa_handler = SIG_DFL;
-	sigaction(EOF, &eof_act, NULL);
+int	main(void)
+{
+	char				*input;
+
+	set_signal_handler();
 	while (42)
 	{
-
 		input = readline("minishell> ");
 		if (input == NULL)
 			exit(0);
