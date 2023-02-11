@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   type.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/11 18:42:10 by almelo           ###   ########.fr       */
+/*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
+/*   Updated: 2023/02/11 17:58:11 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef TYPE_H
+# define TYPE_H
 
-# include <stdlib.h>
-# include <unistd.h>
+typedef struct s_node
+{
+	void			*value;
+	struct s_node	*next;
+}					t_node;
 
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-
-# include <signal.h>
-
-# include "type.h"
-# include "libft/header/libft.h"
-
-void	set_signal_handler(void);
+typedef struct s_envl
+{
+	t_node	*head;
+}			t_envl;
 
 #endif

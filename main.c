@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/10 23:02:45 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/11 18:59:16 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,36 +40,62 @@ char	*ft_strdup(const char *str)
 	return (dup);
 }
 
-char	**envp_dup(char **envp)
+t_node	*new_node(void *value)
 {
-	char	**dup;
-	size_t	len;
+	t_node	*node;
+
+	node = malloc(sizeof(t_node));
+	node->value = value;
+	node->next = NULL;
+	return (node);
+}
+
+void	push(t_envl *env_lst, t_node *new)
+{
+	if (env_lst->head == NULL)
+		env_lst->head = new;
+	else
+	{
+		new->next = env_lst->head;
+		env_lst->head = new;
+	}
+}
+
+void	create_env_list(t_envl *env_lst, char **envp)
+{
 	size_t	i;
 
-	len = 0;
-	while (*(envp + len))
-		len++;
-	dup = malloc((len + 1) * sizeof(char *));
+	env_lst->head = NULL;
 	i = 0;
-	while (i < len)
+	while (*(envp + i))
 	{
-		*(dup + i) = ft_strdup(*(envp + i));
+		push(env_lst, new_node(envp[i])); 
 		i++;
 	}
-	*(dup + i) = NULL;
-	return (dup);
+}
+
+void	print_env_list(t_node *head)
+{
+	t_node	*tmp;
+
+	tmp = head;
+	while (tmp)
+	{
+		printf("%s\n", (char *)tmp->value);
+		tmp = tmp->next;
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
-	char	**envp_copy;
+	t_envl	env_lst;
 
 	(void)argc;
 	(void)argv;
 	set_signal_handler();
-	envp_copy = envp_dup(envp);
-	(void)envp_copy;
+	create_env_list(&env_lst, envp);
+	print_env_list(env_lst.head);
 	while (42)
 	{
 		input = readline("minishell> ");
