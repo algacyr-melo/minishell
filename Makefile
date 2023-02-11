@@ -1,15 +1,16 @@
 NAME	= minishell
 
-SRCS	= main.c signal.c
+SRC		= main.c signal.c
 
-OBJS	= $(SRCS:.c=.o)
+OBJ		= $(SRC:.c=.o)
 
 CFLAGS	= -Wall -Wextra -Werror
 
 CC		= cc
 
-$(NAME)	: $(OBJS) minishell.h
-	$(CC) $(CFLAGS) $(OBJS) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -o $(NAME)
+$(NAME)	: $(OBJ) minishell.h
+	make -C libft
+	$(CC) $(CFLAGS) $(OBJ) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -o $(NAME)
 
 %.o		: %.c
 	$(CC) $(CFLAGS) -c $< -I/Users/$(USER)/.brew/Cellar/readline/8.2.1/include -o $@
@@ -17,7 +18,7 @@ $(NAME)	: $(OBJS) minishell.h
 all		: $(NAME)
 
 clean	:
-	$(RM) $(OBJS)
+	$(RM) $(OBJ)
 
 fclean	: clean
 	$(RM) $(NAME)

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/10 16:40:26 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:02:45 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	set_signal_handler();
 	envp_copy = envp_dup(envp);
+	(void)envp_copy;
 	while (42)
 	{
 		input = readline("minishell> ");
