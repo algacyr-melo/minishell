@@ -10,7 +10,7 @@ CC		= cc
 
 $(NAME)	: $(OBJ) minishell.h
 	make -C libft
-	$(CC) $(CFLAGS) $(OBJ) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -Llibft -lft -o $(NAME)
 
 %.o		: %.c
 	$(CC) $(CFLAGS) -c $< -I/Users/$(USER)/.brew/Cellar/readline/8.2.1/include -o $@

@@ -6,39 +6,11 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/11 18:59:16 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/11 19:11:56 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	len;
-
-	len = 0;
-	while (*(str + len))
-		len++;
-	return (len);
-}
-
-char	*ft_strdup(const char *str)
-{
-	char	*dup;
-	size_t	len;
-	int		i;
-
-	len = ft_strlen(str);
-	dup = malloc((len + 1) * sizeof(char));
-	i = 0;
-	while (*(str + i))
-	{
-		*(dup + i) = *(str + i);
-		i++;
-	}
-	*(dup + i) = '\0';
-	return (dup);
-}
 
 t_node	*new_node(void *value)
 {
@@ -95,7 +67,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	set_signal_handler();
 	create_env_list(&env_lst, envp);
-	print_env_list(env_lst.head);
+	//print_env_list(env_lst.head);
 	while (42)
 	{
 		input = readline("minishell> ");

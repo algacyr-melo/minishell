@@ -6,16 +6,11 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 15:43:30 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/07 15:54:06 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/11 19:08:49 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_putchar_fd(int c, int fd)
-{
-	write(fd, &c, 1);
-}
 
 static void	sigint_handler()
 {
