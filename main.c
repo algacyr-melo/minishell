@@ -6,47 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/11 19:11:56 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/11 19:40:19 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_node	*new_node(void *value)
-{
-	t_node	*node;
-
-	node = malloc(sizeof(t_node));
-	node->value = value;
-	node->next = NULL;
-	return (node);
-}
-
-void	push(t_envl *env_lst, t_node *new)
-{
-	if (env_lst->head == NULL)
-		env_lst->head = new;
-	else
-	{
-		new->next = env_lst->head;
-		env_lst->head = new;
-	}
-}
-
-void	create_env_list(t_envl *env_lst, char **envp)
-{
-	size_t	i;
-
-	env_lst->head = NULL;
-	i = 0;
-	while (*(envp + i))
-	{
-		push(env_lst, new_node(envp[i])); 
-		i++;
-	}
-}
-
-void	print_env_list(t_node *head)
+static void	print_env_list(t_node *head)
 {
 	t_node	*tmp;
 
