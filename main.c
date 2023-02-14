@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/14 16:27:01 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:57:18 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 //void	*tokenize_input(t_tokenl *token_lst, char *input)
 //{
 //}
+//!use ft_substr to create WORD tokens
+//!create OP tokens when find operators
+//!use metacharacters to delimit tokens 
 
 int	main(int argc, char **argv, char **envp)
 {
