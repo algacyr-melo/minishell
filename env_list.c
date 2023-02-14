@@ -6,24 +6,24 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:37:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/13 23:41:16 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:35:45 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_node	*new_node(void *key, void *value)
+static t_env_node	*new_env_node(void *key, void *value)
 {
-	t_node	*node;
+	t_env_node	*node;
 
-	node = malloc(sizeof(t_node));
+	node = malloc(sizeof(t_env_node));
 	node->key = key;
 	node->value = value;
 	node->next = NULL;
 	return (node);
 }
 
-static void	push(t_envl *env_lst, t_node *new)
+static void	push_env(t_envl *env_lst, t_env_node *new)
 {
 	if (env_lst->head == NULL)
 		env_lst->head = new;
@@ -70,7 +70,7 @@ void	create_env_list(t_envl *env_lst, char **envp)
 	{
 		key = get_key(envp[i]);
 		value = get_value(envp[i]);
-		push(env_lst, new_node(key, value));
+		push_env(env_lst, new_env_node(key, value));
 		i++;
 	}
 }

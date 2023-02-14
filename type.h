@@ -6,23 +6,40 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/13 23:33:23 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:35:04 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPE_H
 # define TYPE_H
 
-typedef struct s_node
+typedef struct s_env_node
 {
-	void			*key;
-	void			*value;
-	struct s_node	*next;
-}					t_node;
+	void				*key;
+	void				*value;
+	struct s_env_node	*next;
+}						t_env_node;
 
 typedef struct s_envl
 {
-	t_node	*head;
-}			t_envl;
+	t_env_node	*head;
+}				t_envl;
 
+enum e_token
+{
+	WORD,
+	OP,
+};
+
+typedef struct s_token_node
+{
+	void				*content;
+	enum e_token		token;
+	struct s_token_node	*next;
+}						t_token_node;
+
+typedef struct s_tokenl
+{
+	t_token_node	*head;
+}					t_tokenl;
 #endif
