@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/14 16:35:04 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/15 13:32:35 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,21 @@ enum e_token
 	OP,
 };
 
-typedef struct s_token_node
+enum e_bool
 {
-	void				*content;
-	enum e_token		token;
-	struct s_token_node	*next;
-}						t_token_node;
+	FALSE,
+	TRUE,
+};
+
+typedef struct s_token
+{
+	void			*content;
+	enum e_token	token;
+	struct s_token	*next;
+}						t_token;
 
 typedef struct s_tokenl
 {
-	t_token_node	*head;
-}					t_tokenl;
+	t_token	*head;
+}			t_tokenl;
 #endif

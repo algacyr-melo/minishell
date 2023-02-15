@@ -6,24 +6,72 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/14 16:57:18 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/15 14:24:55 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//void	*tokenize_input(t_tokenl *token_lst, char *input)
-//{
-//}
-//!use ft_substr to create WORD tokens
-//!create OP tokens when find operators
-//!use metacharacters to delimit tokens 
+static int	is_space(int c)
+{
+	return (c == ' ' || c == '\t' || c == '\n');
+}
+
+static t_token	*new_token(void *content)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	token->content = content;
+	token->next = NULL;
+	return (token);
+}
+
+static void	push_token(t_tokenl *token_lst, t_token *new)
+{
+	if (token_lst->head == NULL)
+		token_lst->head = new;
+	else
+	{
+		new->next = token_lst->head;
+		token_lst->head = new;
+	}
+}
+
+void	tokenize_input(t_tokenl *token_lst, char *input)
+{
+	size_t		start;
+	size_t		i;
+	char		*content;
+	enum e_bool	is_reading;
+
+	token_lst->head = NULL;
+	is_reading = FALSE;
+	start = 0;
+	i = 0;
+	while (*(input + i) || is_reading == TRUE)
+	{
+		if ((is_space(*(input + i)) || *(input + i) == '\0') && is_reading == TRUE)
+		{
+			*(input + i) = '\0';
+			content = ft_strdup(input + start);
+			push_token(token_lst, new_token(content));
+			is_reading = FALSE;
+		}
+		else if (!(is_space(*(input + i))) && is_reading == FALSE && *(input + i) != '\0')
+		{
+			is_reading = TRUE;
+			start = i;
+		}
+		i++;
+	}
+}
 
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
 	t_envl		env_lst;
-	//t_tokenl	token_lst;
+	t_tokenl	token_lst;
 
 	(void)argc;
 	(void)argv;
@@ -36,7 +84,7 @@ int	main(int argc, char **argv, char **envp)
 			exit(0);
 		if (strcmp(input, "exit") == 0)
 			break ;
-		//tokenize_input(&token_lst, input);
+		tokenize_input(&token_lst, input);
 		add_history(input);
 		free(input);
 	}
