@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/15 14:24:55 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/16 15:30:49 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,27 +38,43 @@ static void	push_token(t_tokenl *token_lst, t_token *new)
 	}
 }
 
+static int	is_null(int c)
+{
+	return (c == '\0');
+}
+
 void	tokenize_input(t_tokenl *token_lst, char *input)
 {
-	size_t		start;
-	size_t		i;
-	char		*content;
-	enum e_bool	is_reading;
+	size_t			start;
+	size_t			i;
+	char			*content;
+	//enum e_label	label;
+	enum e_bool		is_reading;
+	enum e_bool		is_quoted;
 
 	token_lst->head = NULL;
 	is_reading = FALSE;
+	is_quoted = FALSE;
 	start = 0;
 	i = 0;
-	while (*(input + i) || is_reading == TRUE)
+	while (input[i] || is_reading == TRUE)
 	{
-		if ((is_space(*(input + i)) || *(input + i) == '\0') && is_reading == TRUE)
+		// update quote status
+		if (input[i] == '"' && !is_quoted)
+			is_quoted = TRUE;
+		else if (input[i] == '"' && is_quoted)
+			is_quoted = FALSE;
+		if ((is_space(input[i]) || is_null(input[i])) && (is_reading && !is_quoted))
 		{
+			// handle tokenize
 			*(input + i) = '\0';
 			content = ft_strdup(input + start);
+			//label = get_label(input[i]);
 			push_token(token_lst, new_token(content));
 			is_reading = FALSE;
 		}
-		else if (!(is_space(*(input + i))) && is_reading == FALSE && *(input + i) != '\0')
+		// update reading status
+		else if (!(is_space(*(input + i))) && !is_reading && !is_null(*(input + i)))
 		{
 			is_reading = TRUE;
 			start = i;
@@ -72,6 +88,7 @@ int	main(int argc, char **argv, char **envp)
 	char		*input;
 	t_envl		env_lst;
 	t_tokenl	token_lst;
+	t_token		*tmp;
 
 	(void)argc;
 	(void)argv;
@@ -85,6 +102,12 @@ int	main(int argc, char **argv, char **envp)
 		if (strcmp(input, "exit") == 0)
 			break ;
 		tokenize_input(&token_lst, input);
+		tmp = token_lst.head;
+		while (tmp)
+		{
+			printf("%s\n", (char *)tmp->content);
+			tmp = tmp->next;
+		}
 		add_history(input);
 		free(input);
 	}

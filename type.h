@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/15 13:32:35 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/16 15:30:41 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_envl
 	t_env_node	*head;
 }				t_envl;
 
-enum e_token
+enum e_label
 {
 	WORD,
 	OP,
@@ -40,9 +40,9 @@ enum e_bool
 typedef struct s_token
 {
 	void			*content;
-	enum e_token	token;
+	enum e_label	label;
 	struct s_token	*next;
-}						t_token;
+}					t_token;
 
 typedef struct s_tokenl
 {
