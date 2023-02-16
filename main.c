@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/16 15:30:49 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/16 18:11:08 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	tokenize_input(t_tokenl *token_lst, char *input)
 	while (input[i] || is_reading == TRUE)
 	{
 		// update quote status
-		if (input[i] == '"' && !is_quoted)
+		if ((input[i] == '"' || input[i] == '\'') && !is_quoted)
 			is_quoted = TRUE;
-		else if (input[i] == '"' && is_quoted)
+		else if ((input[i] == '"' || input[i] == '\'') && is_quoted)
 			is_quoted = FALSE;
 		if ((is_space(input[i]) || is_null(input[i])) && (is_reading && !is_quoted))
 		{
