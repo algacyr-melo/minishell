@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/16 15:30:41 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/17 02:23:49 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ typedef struct s_envl
 enum e_label
 {
 	WORD,
-	OP,
+	PIPE,
+	IN,
+	OUT,
 };
 
 enum e_bool
