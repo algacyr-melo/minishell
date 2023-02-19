@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/19 10:46:28 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/19 12:00:18 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,46 +63,45 @@ static enum e_label	get_label(int c)
 
 void	init_lexer_state(t_lexer_state *state, char *input)
 {
-	state->input = input;
+	state->input_copy = input;
 	state->start = 0;
 	state->is_word = FALSE;
 	state->is_quoted = FALSE;
 }
 
-void	tokenize_input(t_tokenl *token_lst, char *input)
+enum e_bool	get_quote_state(int c, enum e_bool is_quoted)
 {
-	t_lexer_state	state;
-	size_t			i;
-	int				tmp;
+	if ((c == '"' || c == '\'') && !is_quoted)
+		is_quoted = TRUE;
+	else if ((c == '"' || c == '\'') && is_quoted)
+		is_quoted = FALSE;
+	return (is_quoted);
+}
 
-	init_lexer_state(&state, input);
+void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
+{
+	size_t			i;
+
 	token_lst->head = NULL;
 	i = 0;
-	while (input[i] || state.is_word == TRUE)
+	while (input[i] != '\0' || state->is_word == TRUE)
 	{
-		// update quote status
-		if ((input[i] == '"' || input[i] == '\'') && !state.is_quoted)
-			state.is_quoted = TRUE;
-		else if ((input[i] == '"' || input[i] == '\'') && state.is_quoted)
-			state.is_quoted = FALSE;
+		state->is_quoted = get_quote_state(input[i], state->is_quoted);
 		if ((is_metachar(input[i]) || input[i] == '\0')
-			&& (state.is_word && !state.is_quoted))
+			&& (state->is_word && !state->is_quoted))
 		{
-			// handle tokenize
-			tmp = input[i];
-			input[i] = '\0';
-			push_token(token_lst, new_token(input + state.start, WORD));
-			if (is_operator(tmp))
-				push_token(token_lst, new_token(NULL, get_label(tmp)));
-			state.is_word = FALSE;
+			state->input_copy[i] = '\0';
+			push_token(token_lst, new_token(state->input_copy + state->start, WORD));
+			if (is_operator(input[i]))
+				push_token(token_lst, new_token(NULL, get_label(input[i])));
+			state->is_word = FALSE;
 		}
-		else if (is_operator(input[i]) && !state.is_word)
+		else if (is_operator(input[i]) && !state->is_word)
 			push_token(token_lst, new_token(NULL, get_label(input[i])));
-		// update reading status
-		if (!(is_metachar(input[i])) && !state.is_word && input[i] != '\0')
+		if (!(is_metachar(input[i])) && !state->is_word && input[i] != '\0')
 		{
-			state.is_word = TRUE;
-			state.start = i;
+			state->is_word = TRUE;
+			state->start = i;
 		}
 		i++;
 	}
@@ -110,10 +109,11 @@ void	tokenize_input(t_tokenl *token_lst, char *input)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char		*input;
-	t_envl		env_lst;
-	t_tokenl	token_lst;
-	t_token		*tmp;
+	char			*input;
+	t_envl			env_lst;
+	t_tokenl		token_lst;
+	t_token			*tmp;
+	t_lexer_state	lexer_state;
 
 	(void)argc;
 	(void)argv;
@@ -124,10 +124,9 @@ int	main(int argc, char **argv, char **envp)
 		input = readline("minishell> ");
 		if (input == NULL)
 			exit(0);
-		if (strcmp(input, "exit") == 0)
-			break ;
 		add_history(input);
-		tokenize_input(&token_lst, input);
+		init_lexer_state(&lexer_state, ft_strdup(input));
+		tokenize_input(&token_lst, input, &lexer_state);
 		tmp = token_lst.head;
 		while (tmp)
 		{
@@ -136,6 +135,5 @@ int	main(int argc, char **argv, char **envp)
 		}
 		free(input);
 	}
-	free(input);
 	return (0);
 }
