@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/17 02:23:49 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/19 10:40:55 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,14 @@ typedef struct s_token
 	enum e_label	label;
 	struct s_token	*next;
 }					t_token;
+
+typedef struct s_lexer_state
+{
+	char		*input;
+	size_t		start;
+	enum e_bool	is_word;
+	enum e_bool	is_quoted;
+}				t_lexer_state;
 
 typedef struct s_tokenl
 {
