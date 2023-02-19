@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:48:19 by almelo            #+#    #+#             */
-/*   Updated: 2022/10/06 16:07:40 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/19 13:01:03 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int		ft_isdigit(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);
 int		ft_isprint(int c);
+int		ft_isspace(int c);
 
 // String
 size_t	ft_strlen(const char *s);

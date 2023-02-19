@@ -1,6 +1,6 @@
 NAME	= minishell
 
-SRC		= main.c signal.c env_list.c
+SRC		= main.c signal.c env_list.c token_list.c lexer.c
 
 OBJ		= $(SRC:.c=.o)
 
