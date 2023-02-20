@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/19 13:43:18 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/20 13:25:58 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 
 	token_lst->head = NULL;
 	i = 0;
-	while (input[i] != '\0' || state->is_word == TRUE)
+	while (i <= ft_strlen(input))
 	{
 		state->is_quoted = get_quote_state(input[i], state->is_quoted);
 		if ((is_metachar(input[i]) || input[i] == '\0')

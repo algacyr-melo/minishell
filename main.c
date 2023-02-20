@@ -6,15 +6,15 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/19 13:32:12 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/20 14:26:08 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	init_lexer_state(t_lexer_state *state, char *input)
+static void	init_lexer_state(t_lexer_state *state, char *input_copy)
 {
-	state->input_copy = input;
+	state->input_copy = input_copy;
 	state->start = 0;
 	state->is_word = FALSE;
 	state->is_quoted = FALSE;
