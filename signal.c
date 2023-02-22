@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 15:43:30 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/11 19:08:49 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/22 12:27:22 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,12 @@ void	set_signal_handler(void)
 	struct sigaction	sigquit_act;
 
 	sigint_act.sa_handler = sigint_handler;
+	sigint_act.sa_flags = SA_RESTART;
+	sigemptyset(&sigint_act.sa_mask);
 	sigaction(SIGINT, &sigint_act, NULL);
 
 	sigquit_act.sa_handler = SIG_IGN;
+	sigquit_act.sa_flags = SA_RESTART;
+	sigemptyset(&sigquit_act.sa_mask);
 	sigaction(SIGQUIT, &sigquit_act, NULL);
 }
