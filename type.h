@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/19 12:03:11 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/22 17:44:10 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_env_node
 typedef struct s_envl
 {
 	t_env_node	*head;
+	t_env_node	*tail;
 }				t_envl;
 
 enum e_label
@@ -57,5 +58,6 @@ typedef struct s_token
 typedef struct s_tokenl
 {
 	t_token	*head;
+	t_token	*tail;
 }			t_tokenl;
 #endif

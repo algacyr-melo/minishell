@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/22 16:47:06 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/22 17:49:31 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int	main(int argc, char **argv, char **envp)
 	t_envl			env_lst;
 	t_tokenl		token_lst;
 	t_lexer_state	lexer_state;
-	t_token			*tmp;
 
 	(void)argc;
 	(void)argv;
@@ -77,12 +76,6 @@ int	main(int argc, char **argv, char **envp)
 		add_history(input);
 		init_lexer_state(&lexer_state, ft_strdup(input));
 		tokenize_input(&token_lst, input, &lexer_state);
-		tmp = token_lst.head;
-		while (tmp)
-		{
-			printf("%s: %d\n", (char *)tmp->content, tmp->label);
-			tmp = tmp->next;
-		}
 		free(input);
 		free(lexer_state.input_copy);
 		free_token_list(&token_lst);

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:37:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/14 16:35:45 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/22 17:49:05 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@ static t_env_node	*new_env_node(void *key, void *value)
 static void	push_env(t_envl *env_lst, t_env_node *new)
 {
 	if (env_lst->head == NULL)
+	{
 		env_lst->head = new;
+		env_lst->tail = new;
+	}
 	else
 	{
-		new->next = env_lst->head;
-		env_lst->head = new;
+		env_lst->tail->next = new;
+		env_lst->tail = new;
 	}
 }
 
