@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/22 17:49:31 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/23 20:33:31 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,42 @@ void	handle_exit(t_envl *env_lst)
 	exit(0);
 }
 
+char	**list_to_array(t_tokenl *token_lst)
+{
+	char	**argv;
+	t_token	*tmp;
+	size_t	i;
+
+	argv = malloc((token_lst->length + 1) * sizeof(char *));
+	tmp = token_lst->head;
+	i = 0;
+	while (i < token_lst->length)
+	{
+		argv[i] = (char *)tmp->content;
+		tmp = tmp->next;
+		i++;
+	}
+	argv[i] = NULL;
+	return (argv);
+}
+
+void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
+{
+	char	**argv;
+	pid_t	pid;
+
+	(void)env_lst;
+	argv = list_to_array(token_lst);
+	pid = fork();
+	if (pid == 0)
+	{
+		if (execve(argv[0], argv, NULL) == -1)
+			exit(0);
+	}
+	else
+		wait(&pid);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char			*input;
@@ -76,6 +112,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(input);
 		init_lexer_state(&lexer_state, ft_strdup(input));
 		tokenize_input(&token_lst, input, &lexer_state);
+		handle_execution(&token_lst, &env_lst);
 		free(input);
 		free(lexer_state.input_copy);
 		free_token_list(&token_lst);

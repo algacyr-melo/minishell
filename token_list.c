@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 12:11:59 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/22 17:42:28 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/23 19:29:26 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ void	push_token(t_tokenl *token_lst, t_token *new)
 	{
 		token_lst->head = new;
 		token_lst->tail = new;
+		token_lst->length = 0;
 	}
 	else
 	{
 		token_lst->tail->next = new;
 		token_lst->tail = new;
 	}
+	token_lst->length++;
 }
 
 t_token	*new_token(void *content, enum e_label label)

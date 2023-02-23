@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/19 13:47:12 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/23 19:21:08 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include <readline/history.h>
 
 # include <signal.h>
+
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # include "type.h"
 # include "libft/header/libft.h"
