@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/24 17:39:33 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/24 19:00:21 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,32 @@ char	**list_to_envp(t_envl *env_lst)
 	return (envp);
 }
 
+char	*get_pathname(char **argv, t_envl *env_lst)
+{
+	char	**pathv;
+	char	*pathname;
+	size_t	i;
+
+	if (access(argv[0], F_OK) == 0)
+		return (argv[0]);
+	pathv = ft_split(env_lst->path->value, ':');
+	argv[0] = ft_strjoin("/", argv[0]);
+	i = 0;
+	while (pathv[i])
+	{
+		pathname = ft_strjoin(pathv[i], argv[0]);
+		if (access(pathname, F_OK) == 0)
+			return (pathname);
+		i++;
+	}
+	return (NULL);
+}
+
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
 	char	**argv;
 	char	**envp;
+	char	*pathname;
 	pid_t	pid;
 
 	argv = list_to_array(token_lst);
@@ -121,7 +143,13 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(argv[0], argv, envp) == -1)
+		pathname = get_pathname(argv, env_lst);
+		if (pathname)
+		{
+			if (execve(pathname, argv, envp) == -1)
+				exit(0);
+		}
+		else
 			exit(0);
 	}
 	else
