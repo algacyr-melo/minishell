@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:37:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/24 16:11:40 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/24 18:02:16 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static void	push_env(t_envl *env_lst, t_env_node *new)
 		env_lst->tail->next = new;
 		env_lst->tail = new;
 	}
+	if (ft_strcmp(new->key, "PATH") == 0)
+		env_lst->path = new;
 	env_lst->length++;
 }
 
