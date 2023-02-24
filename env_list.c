@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:37:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/22 17:49:05 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/24 16:11:40 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static void	push_env(t_envl *env_lst, t_env_node *new)
 		env_lst->tail->next = new;
 		env_lst->tail = new;
 	}
+	env_lst->length++;
 }
 
 char	*get_key(char *env_str)
@@ -68,6 +69,7 @@ void	create_env_list(t_envl *env_lst, char **envp)
 	char	*value;
 
 	env_lst->head = NULL;
+	env_lst->length = 0;
 	i = 0;
 	while (*(envp + i))
 	{

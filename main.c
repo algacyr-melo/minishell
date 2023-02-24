@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/23 20:33:31 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/24 17:39:33 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,17 +76,52 @@ char	**list_to_array(t_tokenl *token_lst)
 	return (argv);
 }
 
+char	*join_key_value(char *key, char *value)
+{
+	char	*content;
+	size_t	key_len;
+	size_t	value_len;
+
+	key_len = ft_strlen(key);
+	value_len = ft_strlen(value);
+	content = malloc((key_len + value_len + 2) * sizeof(*content));
+	ft_memcpy(content, key, key_len);
+	content[key_len] = '=';
+	ft_memcpy(content + key_len + 1, value, value_len);
+	return (content);
+}
+
+char	**list_to_envp(t_envl *env_lst)
+{
+	char		**envp;
+	t_env_node	*tmp;
+	size_t		i;
+
+	envp = malloc((env_lst->length + 1) * sizeof(char *));
+	tmp = env_lst->head;
+	i = 0;
+	while (i < env_lst->length)
+	{
+		envp[i] = join_key_value(tmp->key, tmp->value);
+		tmp = tmp->next;
+		i++;
+	}
+	envp[i] = NULL;
+	return (envp);
+}
+
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
 	char	**argv;
+	char	**envp;
 	pid_t	pid;
 
-	(void)env_lst;
 	argv = list_to_array(token_lst);
+	envp = list_to_envp(env_lst);
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(argv[0], argv, NULL) == -1)
+		if (execve(argv[0], argv, envp) == -1)
 			exit(0);
 	}
 	else
