@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/24 19:00:21 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/24 21:27:39 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ char	*join_key_value(char *key, char *value)
 	key_len = ft_strlen(key);
 	value_len = ft_strlen(value);
 	content = malloc((key_len + value_len + 2) * sizeof(*content));
-	ft_memcpy(content, key, key_len);
+	ft_memcpy(content, key, key_len + 1);
 	content[key_len] = '=';
-	ft_memcpy(content + key_len + 1, value, value_len);
+	ft_memcpy(content + key_len + 1, value, value_len + 1);
 	return (content);
 }
 
@@ -131,6 +131,19 @@ char	*get_pathname(char **argv, t_envl *env_lst)
 	return (NULL);
 }
 
+void	deep_free(char **envp)
+{
+	size_t	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		free(envp[i]);
+		i++;
+	}
+	free(envp);
+}
+
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
 	char	**argv;
@@ -150,10 +163,16 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 				exit(0);
 		}
 		else
+		{
+			free(argv);
+			deep_free(envp);
 			exit(0);
+		}
 	}
 	else
 		wait(&pid);
+	free(argv);
+	deep_free(envp);
 }
 
 int	main(int argc, char **argv, char **envp)
