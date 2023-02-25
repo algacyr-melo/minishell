@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/24 18:03:44 by almelo           ###   ########.fr       */
+/*   Updated: 2023/02/25 18:38:45 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ enum e_label
 	PIPE,
 	IN,
 	OUT,
+	HEREDOC,
+	APPEND,
 };
 
 enum e_bool
