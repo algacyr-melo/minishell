@@ -6,24 +6,24 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 16:01:17 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/01 17:08:10 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	deep_free(char **envp)
-{
-	size_t	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		free(envp[i]);
-		i++;
-	}
-	free(envp);
-}
+//static void	deep_free(char **envp)
+//{
+//	size_t	i;
+//
+//	i = 0;
+//	while (envp[i])
+//	{
+//		free(envp[i]);
+//		i++;
+//	}
+//	free(envp);
+//}
 
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
@@ -32,11 +32,11 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	char	*pathname;
 	pid_t	pid;
 
-	argv = list_to_array(token_lst);
-	envp = list_to_envp(env_lst);
 	pid = fork();
 	if (pid == 0)
 	{
+		argv = list_to_array(token_lst);
+		envp = list_to_envp(env_lst);
 		pathname = get_pathname(argv, env_lst);
 		if (pathname)
 		{
@@ -48,6 +48,6 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	}
 	else
 		wait(&pid);
-	free(argv);
-	deep_free(envp);
+	//free(argv);
+	//deep_free(envp);
 }
