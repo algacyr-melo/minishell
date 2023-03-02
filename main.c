@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 16:10:04 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/01 22:10:44 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int argc, char **argv, char **envp)
 	create_env_list(&env_lst, envp);
 	while (42)
 	{
-		input = readline("minishell> ");
+		input = readline("minishell$ ");
 		if (input == NULL)
 			handle_exit(&env_lst);
 		add_history(input);
