@@ -1,59 +1,83 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_list.c                                       :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/19 12:11:59 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 11:52:34 by almelo           ###   ########.fr       */
+/*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
+/*   Updated: 2023/03/04 11:53:44 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	queue_token(t_tokenl *token_lst, t_token *new)
+static int	is_operator(int c)
 {
-	if (token_lst->head == NULL)
-	{
-		token_lst->head = new;
-		token_lst->tail = new;
-		token_lst->length = 0;
-	}
-	else
-	{
-		token_lst->tail->next = new;
-		token_lst->tail = new;
-	}
-	token_lst->length++;
+	return (c == '|' || c == '<' || c == '>');
 }
 
-t_token	*dequeue_token(t_tokenl *token_lst)
- {
-     t_token *head;
- 
-     head = token_lst->head;
-     if (token_lst->length > 1)
-     {
-         token_lst->head = head->next;
-         head->next = NULL;
-     }
-     else
-     {
-         token_lst->head = NULL;
-         token_lst->tail = NULL;
-     }
-     token_lst->length--;
-     return (head);
- }
-
-t_token	*new_token(void *content, enum e_label label)
+static int	is_metachar(int c)
 {
-	t_token	*token;
+	return (ft_isspace(c) || is_operator(c));
+}
 
-	token = malloc(sizeof(t_token));
-	token->content = content;
-	token->label = label;
-	token->next = NULL;
-	return (token);
+static enum e_label	get_label(char *input, size_t i)
+{
+	if (input[i] == '|')
+		return (PIPE);
+	else if (input[i] == '<')
+	{
+		if (input[i + 1] == '<')
+			return (HEREDOC);
+		else
+			return (IN);
+	}
+	else if (input[i] == '>')
+	{
+		if (input[i + 1] == '>')
+			return (APPEND);
+		else
+			return (OUT);
+	}
+	else
+		return (WORD);
+}
+
+static enum e_bool	get_quote_state(int c, enum e_bool is_quoted)
+{
+	if ((c == '"' || c == '\'') && !is_quoted)
+		is_quoted = TRUE;
+	else if ((c == '"' || c == '\'') && is_quoted)
+		is_quoted = FALSE;
+	return (is_quoted);
+}
+
+void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
+{
+	size_t			i;
+
+	token_lst->head = NULL;
+	i = 0;
+	while (i <= ft_strlen(input))
+	{
+		state->is_quoted = get_quote_state(input[i], state->is_quoted);
+		if ((is_metachar(input[i]) || input[i] == '\0')
+			&& (state->is_word && !state->is_quoted))
+		{
+			state->input_copy[i] = '\0';
+			queue_token(token_lst, new_token(state->input_copy + state->start, WORD));
+			if (is_operator(input[i]))
+				queue_token(token_lst, new_token(NULL, get_label(input, i)));
+			state->is_word = FALSE;
+		}
+		else if (is_operator(input[i]) && !state->is_word)
+			queue_token(token_lst, new_token(NULL, get_label(input, i)));
+		if (!(is_metachar(input[i])) && !state->is_word && input[i] != '\0')
+		{
+			state->is_word = TRUE;
+			state->start = i;
+		}
+		i++;
+	}
 }

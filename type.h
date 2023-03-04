@@ -6,27 +6,12 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 18:38:45 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 14:31:33 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPE_H
 # define TYPE_H
-
-typedef struct s_env_node
-{
-	void				*key;
-	void				*value;
-	struct s_env_node	*next;
-}						t_env_node;
-
-typedef struct s_envl
-{
-	t_env_node	*head;
-	t_env_node	*tail;
-	t_env_node	*path;
-	size_t		length;
-}				t_envl;
 
 enum e_label
 {
@@ -44,14 +29,6 @@ enum e_bool
 	TRUE,
 };
 
-typedef struct s_lexer_state
-{
-	char		*input_copy;
-	size_t		start;
-	enum e_bool	is_word;
-	enum e_bool	is_quoted;
-}				t_lexer_state;
-
 typedef struct s_token
 {
 	void			*content;
@@ -65,4 +42,28 @@ typedef struct s_tokenl
 	t_token	*tail;
 	size_t	length;
 }			t_tokenl;
+
+typedef struct s_env
+{
+	void			*key;
+	void			*value;
+	struct s_env	*next;
+}					t_env;
+
+typedef struct s_envl
+{
+	t_env	*head;
+	t_env	*tail;
+	t_env	*path;
+	size_t	length;
+}			t_envl;
+
+typedef struct s_lexer_state
+{
+	char		*input_copy;
+	size_t		start;
+	enum e_bool	is_word;
+	enum e_bool	is_quoted;
+}				t_lexer_state;
+
 #endif

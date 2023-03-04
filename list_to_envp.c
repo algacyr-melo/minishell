@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:58:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 16:00:25 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 14:01:12 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ static char	*join_key_value(char *key, char *value)
 
 char	**list_to_envp(t_envl *env_lst)
 {
-	char		**envp;
-	t_env_node	*tmp;
-	size_t		i;
+	char	**envp;
+	t_env	*tmp;
+	size_t	i;
 
 	envp = malloc((env_lst->length + 1) * sizeof(char *));
 	tmp = env_lst->head;

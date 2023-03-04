@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 16:07:13 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 16:09:26 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 14:02:51 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	free_env_list(t_envl *env_lst)
 {
-	t_env_node	*head;
-	t_env_node	*tmp;
+	t_env	*head;
+	t_env	*tmp;
 
 	head = env_lst->head;
 	while (head)
