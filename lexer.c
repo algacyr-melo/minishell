@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 18:46:37 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 11:53:44 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,13 @@ void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 			&& (state->is_word && !state->is_quoted))
 		{
 			state->input_copy[i] = '\0';
-			push_token(token_lst, new_token(state->input_copy + state->start, WORD));
+			queue_token(token_lst, new_token(state->input_copy + state->start, WORD));
 			if (is_operator(input[i]))
-				push_token(token_lst, new_token(NULL, get_label(input, i)));
+				queue_token(token_lst, new_token(NULL, get_label(input, i)));
 			state->is_word = FALSE;
 		}
 		else if (is_operator(input[i]) && !state->is_word)
-			push_token(token_lst, new_token(NULL, get_label(input, i)));
+			queue_token(token_lst, new_token(NULL, get_label(input, i)));
 		if (!(is_metachar(input[i])) && !state->is_word && input[i] != '\0')
 		{
 			state->is_word = TRUE;

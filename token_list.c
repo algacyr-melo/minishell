@@ -6,13 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 12:11:59 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/23 19:29:26 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 11:52:34 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	push_token(t_tokenl *token_lst, t_token *new)
+void	queue_token(t_tokenl *token_lst, t_token *new)
 {
 	if (token_lst->head == NULL)
 	{
@@ -27,6 +27,25 @@ void	push_token(t_tokenl *token_lst, t_token *new)
 	}
 	token_lst->length++;
 }
+
+t_token	*dequeue_token(t_tokenl *token_lst)
+ {
+     t_token *head;
+ 
+     head = token_lst->head;
+     if (token_lst->length > 1)
+     {
+         token_lst->head = head->next;
+         head->next = NULL;
+     }
+     else
+     {
+         token_lst->head = NULL;
+         token_lst->tail = NULL;
+     }
+     token_lst->length--;
+     return (head);
+ }
 
 t_token	*new_token(void *content, enum e_label label)
 {

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/01 17:08:10 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 11:57:22 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	char	*pathname;
 	pid_t	pid;
 
+	argv = get_next_argv(token_lst);
+	envp = list_to_envp(env_lst);
+	pathname = get_pathname(argv, env_lst);
 	pid = fork();
 	if (pid == 0)
 	{
-		argv = list_to_array(token_lst);
-		envp = list_to_envp(env_lst);
-		pathname = get_pathname(argv, env_lst);
 		if (pathname)
 		{
 			if (execve(pathname, argv, envp) == -1)
