@@ -6,13 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:37:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 14:24:46 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 16:16:15 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_key(char *env_str)
+char	*get_key(char *env_str)
 {
 	char	*key;
 	char	*separator;
@@ -24,7 +24,7 @@ static char	*get_key(char *env_str)
 	return (key);
 }
 
-static char	*get_value(char *env_str)
+char	*get_value(char *env_str)
 {
 	char	*value;
 	char	*separator;

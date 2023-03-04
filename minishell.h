@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 14:06:02 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 16:16:08 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ t_env	*new_env(void *key, void *value);
 void	queue_env(t_envl *env_lst, t_env *new);
 
 void	create_env_list(t_envl *env_lst, char **envp);
+char	*get_key(char *env_str);
+char	*get_value(char *env_str);
 
 void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state);
 

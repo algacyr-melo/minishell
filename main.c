@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/01 22:10:44 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/04 17:53:42 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ static void	init_lexer_state(t_lexer_state *state, char *input_copy)
 	state->is_quoted = FALSE;
 }
 
-void	handle_exit(t_envl *env_lst)
+void	handle_exit(t_envl *env_lst, int status)
 {
 	free_env_list(env_lst);
 	printf("exit\n");
-	exit(0);
+	exit(status);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = readline("minishell$ ");
 		if (input == NULL)
-			handle_exit(&env_lst);
+			handle_exit(&env_lst, 0);
 		add_history(input);
 		init_lexer_state(&lexer_state, ft_strdup(input));
 		tokenize_input(&token_lst, input, &lexer_state);
