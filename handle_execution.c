@@ -6,29 +6,32 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/06 15:09:34 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/06 16:21:04 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	echo(char **argv)
+int	echo(int argc, char **argv)
 {
 	size_t		i;
 	enum e_bool	end_nl;
 
-	i = 1;
 	end_nl = TRUE;
-	if (ft_strcmp(argv[i], "-n") == 0)
+	if (argc > 1)
 	{
-		end_nl = FALSE;
-		i++;
-	}
-	while (argv[i])
-	{
-		ft_putstr_fd(argv[i], STDOUT_FILENO);
-		ft_putchar_fd(' ', STDOUT_FILENO);
-		i++;
+		i = 1;
+		if (ft_strcmp(argv[i], "-n") == 0)
+		{
+			end_nl = FALSE;
+			i++;
+		}
+		while (argv[i])
+		{
+			ft_putstr_fd(argv[i], STDOUT_FILENO);
+			ft_putchar_fd(' ', STDOUT_FILENO);
+			i++;
+		}
 	}
 	if (end_nl == TRUE)
 		ft_putchar_fd('\n', STDOUT_FILENO);
@@ -70,7 +73,6 @@ static t_env	*remove_env(t_envl *env_lst, char *key)
 	t_env	*tmp;
 	t_env	*node;
 
-	printf("%s\n", key);
 	tmp = env_lst->head;
 	while (tmp->next)
 	{
@@ -150,7 +152,7 @@ int	handle_builtin(char **argv, char **envp, t_envl *env_lst)
 
 	argc = get_argc(argv);
 	if (ft_strcmp(argv[0], "echo") == 0)
-		return (echo(argv));
+		return (echo(argc, argv));
 	else if (ft_strcmp(argv[0], "cd") == 0)
 		return (cd(argv));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
