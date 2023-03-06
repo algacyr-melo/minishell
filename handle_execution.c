@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 18:13:20 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/06 15:09:34 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	unset(char **argv, t_envl *env_lst)
 
 	key = get_key(argv[1]);
 	tmp = remove_env(env_lst, key);
+	free(tmp);
 	return (0);
 }
 
