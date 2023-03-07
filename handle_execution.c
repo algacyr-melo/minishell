@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/06 16:21:04 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 00:39:30 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,19 @@ int	echo(int argc, char **argv)
 	return (0);
 }
 
-int	cd(char **argv)
+int	cd(int argc, char **argv, t_envl *env_lst)
 {
-	if (chdir(argv[1]) == -1)
-		return (1);
+	char	*path;
+
+	if (argc == 1)
+		path = env_lst->home->value;
+	else
+		path = argv[1];
+	if (chdir(path) == -1)
+	{
+		printf("minishell: cd: %s: %s\n", argv[1], strerror(errno));
+		return (errno);
+	}
 	return (0);
 }
 
@@ -60,6 +69,7 @@ int	export(char **argv, t_envl *env_lst)
 	char	*key;
 	char	*value;
 
+	//to do: if already exists, replace it
 	key = get_key(argv[1]);
 	if (!key)
 		return (1);
@@ -154,7 +164,7 @@ int	handle_builtin(char **argv, char **envp, t_envl *env_lst)
 	if (ft_strcmp(argv[0], "echo") == 0)
 		return (echo(argc, argv));
 	else if (ft_strcmp(argv[0], "cd") == 0)
-		return (cd(argv));
+		return (cd(argc, argv, env_lst));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		return (pwd());
 	else if (ft_strcmp(argv[0], "export") == 0)

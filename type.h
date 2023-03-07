@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 14:31:33 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 00:31:05 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_envl
 	t_env	*head;
 	t_env	*tail;
 	t_env	*path;
+	t_env	*home;
 	size_t	length;
 }			t_envl;
 
