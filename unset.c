@@ -6,19 +6,24 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:00:34 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:02:13 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 18:38:18 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//to do: handle removal for first node
 static t_env	*remove_env(t_envl *env_lst, char *key)
 {
 	t_env   *tmp;
 	t_env   *node;
 
 	tmp = env_lst->head;
+	if (ft_strcmp(tmp->key, key) == 0)
+	{
+		env_lst->head = tmp->next;
+		env_lst->length--;
+		return (tmp);
+	}
 	while (tmp->next)
 	{
 		if (ft_strcmp(tmp->next->key, key) == 0)
