@@ -1,37 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_execution.c                                 :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:12:19 by almelo           ###   ########.fr       */
+/*   Created: 2023/03/07 17:51:35 by almelo            #+#    #+#             */
+/*   Updated: 2023/03/07 17:52:08 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
+//to do: update OLDPWD & PWD
+int cd(int argc, char **argv, t_envl *env_lst)
 {
-	char	**argv;
-	char	**envp;
-	char	*pathname;
-	pid_t	pid;
+    char    *path;
 
-	envp = list_to_envp(env_lst);
-	argv = get_next_argv(token_lst);
-	if (handle_builtin(argv, envp, env_lst) == -1)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			pathname = get_pathname(argv, env_lst);
-			if (execve(pathname, argv, envp) == -1)
-				exit(0);
-		}
-		else
-			wait(&pid);
-	}
-	free(envp);
+    if (argc == 1)
+        path = env_lst->home->value;
+    else
+        path = argv[1];
+    if (chdir(path) == -1)
+    {
+        printf("minishell: cd: %s: %s\n", argv[1], strerror(errno));
+        return (errno);
+    }
+    return (0);
 }
