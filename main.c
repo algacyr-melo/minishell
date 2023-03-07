@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 17:53:42 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 14:54:36 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int	main(int argc, char **argv, char **envp)
 		handle_execution(&token_lst, &env_lst);
 		free(input);
 		free(lexer_state.input_copy);
-		free_token_list(&token_lst);
 	}
 	return (0);
 }

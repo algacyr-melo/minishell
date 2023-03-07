@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 00:39:30 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 15:48:03 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,45 @@ int	pwd(void)
 	char	*buf;
 
 	buf = getcwd(NULL, 0);
+	if (buf == NULL)
+	{
+		printf("minishell: pwd: %s\n", strerror(errno));
+		return (errno);
+	}
 	ft_putendl_fd(buf, STDOUT_FILENO);
 	free(buf);
 	return (0);
+}
+
+t_env	*get_env(t_envl *env_lst, char *key)
+{
+	t_env	*tmp;
+
+	tmp = env_lst->head;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key) == 0)
+			return (tmp);
+		tmp = tmp->next;
+	}
+	return (tmp);
 }
 
 int	export(char **argv, t_envl *env_lst)
 {
 	char	*key;
 	char	*value;
+	t_env	*tmp;
 
-	//to do: if already exists, replace it
 	key = get_key(argv[1]);
-	if (!key)
-		return (1);
 	value = get_value(argv[1]);
-	queue_env(env_lst, new_env(key, value));
+	if (key == NULL || value == NULL)
+		return (1);
+	tmp = get_env(env_lst, key);
+	if (tmp)
+		tmp->value = value;
+	else
+		queue_env(env_lst, new_env(key, value));
 	return (0);
 }
 
@@ -97,14 +120,17 @@ static t_env	*remove_env(t_envl *env_lst, char *key)
 	return (NULL);
 }
 
-int	unset(char **argv, t_envl *env_lst)
+int	unset(char **argv, char **envp, t_envl *env_lst)
 {
 	char	*key;
 	t_env	*tmp;
 
-	key = get_key(argv[1]);
+	key = argv[1];
+	//to do: fix remove env
 	tmp = remove_env(env_lst, key);
 	free(tmp);
+	(void)envp;
+	//envp = list_to_envp(env_lst);
 	return (0);
 }
 
@@ -170,7 +196,7 @@ int	handle_builtin(char **argv, char **envp, t_envl *env_lst)
 	else if (ft_strcmp(argv[0], "export") == 0)
 		return (export(argv, env_lst));
 	else if (ft_strcmp(argv[0], "unset") == 0)
-		return (unset(argv, env_lst));
+		return (unset(argv, envp, env_lst));
 	else if (ft_strcmp(argv[0], "env") == 0)
 		return (env(envp));
 	else if (ft_strcmp(argv[0], "exit") == 0)

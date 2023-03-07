@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:37:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 16:16:15 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 15:28:34 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*get_key(char *env_str)
 	size_t	len;
 
 	separator = ft_strchr(env_str, '=');
+	if (separator == NULL)
+		return (NULL);
 	len = separator - env_str;
 	key = ft_substr(env_str, 0, len);
 	return (key);
@@ -31,6 +33,8 @@ char	*get_value(char *env_str)
 	size_t	len;
 
 	separator = ft_strchr(env_str, '=');
+	if (separator == NULL)
+		return (NULL);
 	len = env_str + (ft_strlen(env_str) - 1) - separator;
 	value = ft_substr(env_str, (separator + 1) - env_str, len);
 	return (value);
