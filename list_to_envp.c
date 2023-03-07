@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:58:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 14:01:12 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 17:00:17 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	**list_to_envp(t_envl *env_lst)
 	t_env	*tmp;
 	size_t	i;
 
+	//to do: fix malloc size
 	envp = malloc((env_lst->length + 1) * sizeof(char *));
 	tmp = env_lst->head;
 	i = 0;

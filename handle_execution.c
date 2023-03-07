@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 15:48:03 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/07 17:39:53 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	echo(int argc, char **argv)
 	return (0);
 }
 
+//to do: update OLDPWD & PWD
 int	cd(int argc, char **argv, t_envl *env_lst)
 {
 	char	*path;
@@ -113,6 +114,7 @@ static t_env	*remove_env(t_envl *env_lst, char *key)
 		{
 			node = tmp->next;
 			tmp->next = tmp->next->next;
+			env_lst->length--;
 			return (node);
 		}
 		tmp = tmp->next;
@@ -120,17 +122,15 @@ static t_env	*remove_env(t_envl *env_lst, char *key)
 	return (NULL);
 }
 
-int	unset(char **argv, char **envp, t_envl *env_lst)
+int	unset(char **argv, t_envl *env_lst)
 {
 	char	*key;
 	t_env	*tmp;
 
 	key = argv[1];
-	//to do: fix remove env
 	tmp = remove_env(env_lst, key);
-	free(tmp);
-	(void)envp;
-	//envp = list_to_envp(env_lst);
+	if (tmp)
+		free(tmp);
 	return (0);
 }
 
@@ -196,7 +196,7 @@ int	handle_builtin(char **argv, char **envp, t_envl *env_lst)
 	else if (ft_strcmp(argv[0], "export") == 0)
 		return (export(argv, env_lst));
 	else if (ft_strcmp(argv[0], "unset") == 0)
-		return (unset(argv, envp, env_lst));
+		return (unset(argv, env_lst));
 	else if (ft_strcmp(argv[0], "env") == 0)
 		return (env(envp));
 	else if (ft_strcmp(argv[0], "exit") == 0)
@@ -225,4 +225,5 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		else
 			wait(&pid);
 	}
+	free(envp);
 }
