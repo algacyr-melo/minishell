@@ -23,9 +23,9 @@ SRC		= main.c \
 
 OBJ		= $(SRC:.c=.o)
 
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g
 
-CC		= cc
+CC		= gcc
 
 $(NAME)	: $(OBJ) minishell.h
 	make -C libft

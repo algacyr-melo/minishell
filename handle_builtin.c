@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:11:01 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:18:21 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/09 14:13:00 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int handle_builtin(char **argv, char **envp, t_envl *env_lst)
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		return (pwd());
 	else if (ft_strcmp(argv[0], "export") == 0)
-		return (ft_export(argv, env_lst));
+		return (ft_export(argc, argv, envp, env_lst));
 	else if (ft_strcmp(argv[0], "unset") == 0)
 		return (unset(argv, env_lst));
 	else if (ft_strcmp(argv[0], "env") == 0)

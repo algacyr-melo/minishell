@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:00:34 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/09 13:40:08 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/09 15:32:25 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,16 @@ int unset(char **argv, t_envl *env_lst)
 {
 	char    *key;
 	t_env   *tmp;
+	size_t	i;
 
-	key = argv[1];
-	tmp = remove_env(env_lst, key);
-	if (tmp)
-		free(tmp);
+	i = 1;
+	while (argv[i])
+	{
+		key = argv[i];
+		tmp = remove_env(env_lst, key);
+		if (tmp)
+			free(tmp);
+		i++;
+	}
 	return (0);
 }
