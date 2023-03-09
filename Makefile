@@ -10,6 +10,7 @@ SRC		= main.c \
 		  get_next_argv.c \
 		  list_to_envp.c \
 		  get_pathname.c \
+		  get_env.c \
 		  list_free.c \
 		  handle_builtin.c \
 		  echo.c \

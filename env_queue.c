@@ -34,6 +34,7 @@
          env_lst->tail->next = new;
          env_lst->tail = new;
      }
+	 //to do: create a get_env function
      if (ft_strcmp(new->key, "PATH") == 0)
          env_lst->path = new;
 	 else if (ft_strcmp(new->key, "HOME") == 0)

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:20:48 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/09 12:04:59 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst);
 char	**get_next_argv(t_tokenl *token_lst);
 char	**list_to_envp(t_envl *env_lst);
 char	*get_pathname(char **argv, t_envl *env_lst);
+t_env	*get_env(t_envl *env_lst, char *key);
 
 int		handle_builtin(char **argv, char **envp, t_envl *env_lst);
 int		echo(int argc, char **argv);
