@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:57:24 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 11:54:48 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/10 12:33:33 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**get_next_argv(t_tokenl *token_lst)
 	while (token_lst->head && token_lst->head->content)
 	{
 		argv[i] = (char *)token_lst->head->content;
-		dequeue_token(token_lst);
+		free(dequeue_token(token_lst));
 		i++;
 	}
 	argv[i] = NULL;

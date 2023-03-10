@@ -6,11 +6,24 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:12:19 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/10 12:39:47 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	deep_free(char **envp)
+{
+	size_t	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		free(envp[i]);
+		i++;
+	}
+	free(envp);
+}
 
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
@@ -33,5 +46,6 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		else
 			wait(&pid);
 	}
-	free(envp);
+	free(argv);
+	deep_free(envp);
 }

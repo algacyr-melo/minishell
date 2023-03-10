@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 16:07:13 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/09 15:36:15 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/10 12:30:46 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	free_env_list(t_envl *env_lst)
 	while (head)
 	{
 		tmp = head->next;
+		free(head->key);
+		free(head->value);
 		free(head);
 		head = tmp;
 	}

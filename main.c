@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 14:54:36 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/10 12:26:35 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(input);
 		init_lexer_state(&lexer_state, ft_strdup(input));
 		tokenize_input(&token_lst, input, &lexer_state);
+		//parse_tokens(&token_lst, &env_lst);
 		handle_execution(&token_lst, &env_lst);
 		free(input);
 		free(lexer_state.input_copy);
