@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/10 12:26:35 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/10 14:35:14 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,22 @@ void	handle_exit(t_envl *env_lst, int status)
 	printf("exit\n");
 	exit(status);
 }
+
+//void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
+//{
+//	t_token		*tmp;
+//	char		*content;
+//	enum e_bool	prevent_default;
+//
+//	prevent_default = FALSE;
+//	tmp = token_lst->head;
+//	while (tmp)
+//	{
+//		if (tmp->label == WORD)
+//			content = parse(tmp->content);
+//		tmp = tmp->next;
+//	}
+//}
 
 int	main(int argc, char **argv, char **envp)
 {
