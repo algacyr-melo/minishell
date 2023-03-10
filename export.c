@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:56:07 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/09 14:17:46 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/10 13:40:39 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ int ft_export(int argc, char **argv, char **envp, t_envl *env_lst)
 		}
 		tmp = get_env(env_lst, key);
 		if (tmp)
+		{
+			free(key);
+			free(tmp->value);
 			tmp->value = value;
+		}
 		else
 			queue_env(env_lst, new_env(key, value));
 		i++;
