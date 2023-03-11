@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_list.c                                       :+:      :+:    :+:   */
+/*   token_queue.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 12:11:59 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 14:04:07 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/11 17:14:05 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	queue_token(t_tokenl *token_lst, t_token *new)
 		token_lst->head = new;
 		token_lst->tail = new;
 		token_lst->length = 0;
+		token_lst->pipe_count = 0;
 	}
 	else
 	{
@@ -37,6 +38,8 @@ void	queue_token(t_tokenl *token_lst, t_token *new)
 		token_lst->tail = new;
 	}
 	token_lst->length++;
+	if (new->label == PIPE)
+		token_lst->pipe_count++;
 }
 
 t_token	*dequeue_token(t_tokenl *token_lst)

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 00:31:05 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/11 17:13:45 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_tokenl
 	t_token	*head;
 	t_token	*tail;
 	size_t	length;
+	size_t	pipe_count;
 }			t_tokenl;
 
 typedef struct s_env
