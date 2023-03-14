@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/14 16:47:58 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/14 19:42:00 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,50 +25,69 @@ static void	deep_free(char **envp)
 	free(envp);
 }
 
+void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
+{
+	pid_t	pid;
+	int		pipefd[2];
+	char	*pathname;
+
+	pipe(pipefd);
+	pid = fork();
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+		dup2(*prevpipe, STDIN_FILENO);
+		close(*prevpipe);
+		pathname = get_pathname(argv, env_lst);
+		if (execve(pathname, argv, envp) == -1)
+			exit(0);
+	}
+	else
+	{
+		close(pipefd[1]);
+		close(*prevpipe);
+		*prevpipe = pipefd[0];
+	}
+}
+
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
 	char	**argv;
 	char	**envp;
 	char	*pathname;
 	pid_t	pid;
-	int		pipefd[2];
 	int		prevpipe;
 
-	prevpipe = dup(0);
+	prevpipe = dup(STDIN_FILENO);
 	while (token_lst->head)
 	{
 		if (token_lst->head->label == PIPE)
 			free(dequeue_token(token_lst));
 		envp = list_to_envp(env_lst);
 		argv = get_next_argv(token_lst);
-		if (token_lst->head)
-			pipe(pipefd);
 		if (handle_builtin(argv, envp, env_lst) == -1)
 		{
-			pid = fork();
-			if (pid == 0)
-			{
-				if (token_lst->head)
-				{
-					close(pipefd[0]);
-					dup2(pipefd[1], STDOUT_FILENO);
-					close(pipefd[1]);
-				}
-				dup2(prevpipe, STDIN_FILENO);
-				close(prevpipe);
-				pathname = get_pathname(argv, env_lst);
-				if (execve(pathname, argv, envp) == -1)
-					exit(0);
-			}
+			if (token_lst->head)
+				handle_pipe(argv, envp, env_lst, &prevpipe);
 			else
 			{
-				if (token_lst->head == NULL)
+				pid = fork();
+				if (pid == 0)
+				{
+					dup2(prevpipe, STDIN_FILENO);
+					close(prevpipe);
+					pathname = get_pathname(argv, env_lst);
+					if (execve(pathname, argv, envp) == -1)
+						exit(0);
+				}
+				else
 				{
 					close(prevpipe);
-					wait(&pid);
+					while (wait(NULL) != -1)
+						;
 				}
-				close(pipefd[1]);
-				prevpipe = pipefd[0];
 			}
 		}
 		free(argv);
