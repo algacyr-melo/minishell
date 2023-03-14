@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/10 12:39:47 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/14 16:47:58 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,47 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	char	**envp;
 	char	*pathname;
 	pid_t	pid;
+	int		pipefd[2];
+	int		prevpipe;
 
-	envp = list_to_envp(env_lst);
-	argv = get_next_argv(token_lst);
-	if (handle_builtin(argv, envp, env_lst) == -1)
+	prevpipe = dup(0);
+	while (token_lst->head)
 	{
-		pid = fork();
-		if (pid == 0)
+		if (token_lst->head->label == PIPE)
+			free(dequeue_token(token_lst));
+		envp = list_to_envp(env_lst);
+		argv = get_next_argv(token_lst);
+		if (token_lst->head)
+			pipe(pipefd);
+		if (handle_builtin(argv, envp, env_lst) == -1)
 		{
-			pathname = get_pathname(argv, env_lst);
-			if (execve(pathname, argv, envp) == -1)
-				exit(0);
+			pid = fork();
+			if (pid == 0)
+			{
+				if (token_lst->head)
+				{
+					close(pipefd[0]);
+					dup2(pipefd[1], STDOUT_FILENO);
+					close(pipefd[1]);
+				}
+				dup2(prevpipe, STDIN_FILENO);
+				close(prevpipe);
+				pathname = get_pathname(argv, env_lst);
+				if (execve(pathname, argv, envp) == -1)
+					exit(0);
+			}
+			else
+			{
+				if (token_lst->head == NULL)
+				{
+					close(prevpipe);
+					wait(&pid);
+				}
+				close(pipefd[1]);
+				prevpipe = pipefd[0];
+			}
 		}
-		else
-			wait(&pid);
+		free(argv);
+		deep_free(envp);
 	}
-	free(argv);
-	deep_free(envp);
 }
