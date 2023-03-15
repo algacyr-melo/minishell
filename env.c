@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:06:38 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:07:07 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/15 16:29:25 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ int env(char **envp)
         ft_putendl_fd(envp[i], STDOUT_FILENO);
         i++;
     }
-    return (0);
+    exit(0);
 }

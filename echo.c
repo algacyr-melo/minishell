@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:45:47 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 17:50:25 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/15 18:20:02 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@ int echo(int argc, char **argv)
         while (argv[i])
         {
             ft_putstr_fd(argv[i], STDOUT_FILENO);
-            ft_putchar_fd(' ', STDOUT_FILENO);
+			if (argv[i + 1])
+            	ft_putchar_fd(' ', STDOUT_FILENO);
             i++;
         }
     }
     if (end_nl == TRUE)
         ft_putchar_fd('\n', STDOUT_FILENO);
-    return (0);
+    exit(0);
 }

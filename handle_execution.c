@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/14 23:26:32 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/15 18:18:52 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	char	*pathname;
 
 	pipe(pipefd);
-	//handle_builtin(argv, envp, env_lst);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -41,9 +40,12 @@ void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 		close(pipefd[1]);
 		dup2(*prevpipe, STDIN_FILENO);
 		close(*prevpipe);
-		pathname = get_pathname(argv, env_lst);
-		if (execve(pathname, argv, envp) == -1)
-			exit(0);
+		if (handle_builtin(argv, envp, env_lst) == -1)
+		{
+			pathname = get_pathname(argv, env_lst);
+			if (execve(pathname, argv, envp) == -1)
+				exit(0);
+		}
 	}
 	else
 	{
@@ -59,14 +61,16 @@ void	handle_last_cmd(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	char	*pathname;
 
 	pid = fork();
-	//handle_builtin(argv, envp, env_lst);
 	if (pid == 0)
 	{
 		dup2(*prevpipe, STDIN_FILENO);
 		close(*prevpipe);
-		pathname = get_pathname(argv, env_lst);
-		if (execve(pathname, argv, envp) == -1)
-			exit(0);
+		if (handle_builtin(argv, envp, env_lst) == -1)
+		{
+			pathname = get_pathname(argv, env_lst);
+			if (execve(pathname, argv, envp) == -1)
+				exit(0);
+		}
 	}
 	else
 	{

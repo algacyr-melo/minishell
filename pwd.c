@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:53:30 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 17:54:33 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/15 16:25:42 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
      if (buf == NULL)
      {
          printf("minishell: pwd: %s\n", strerror(errno));
-         return (errno);
+         exit(errno);
      }
      ft_putendl_fd(buf, STDOUT_FILENO);
      free(buf);
-     return (0);
+     exit(0);
  }
