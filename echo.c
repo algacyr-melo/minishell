@@ -6,13 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:45:47 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/15 18:20:02 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/15 23:30:07 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int echo(int argc, char **argv)
+void	echo(int argc, char **argv)
 {
     size_t      i;
     enum e_bool end_nl;

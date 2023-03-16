@@ -6,13 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:00:34 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/15 16:29:05 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/16 01:36:25 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_env	*remove_env(t_envl *env_lst, char *key)
+t_env	*remove_env(t_envl *env_lst, char *key)
 {
 	t_env   *tmp;
 	t_env	*prev;
@@ -55,5 +55,5 @@ int unset(char **argv, t_envl *env_lst)
 		}
 		i++;
 	}
-	exit(0);
+	return (0);
 }

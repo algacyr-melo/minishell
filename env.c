@@ -6,13 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:06:38 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/15 16:29:25 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/16 00:00:25 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int env(char **envp)
+void	env(char **envp)
 {
     size_t  i;
 

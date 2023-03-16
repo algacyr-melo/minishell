@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/15 18:18:52 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/16 01:39:41 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,16 @@ void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 		close(pipefd[1]);
 		dup2(*prevpipe, STDIN_FILENO);
 		close(*prevpipe);
-		if (handle_builtin(argv, envp, env_lst) == -1)
+		if (handle_builtin_cp(argv, envp) == -1)
 		{
 			pathname = get_pathname(argv, env_lst);
-			if (execve(pathname, argv, envp) == -1)
-				exit(0);
+			if (pathname)
+			{
+				if (execve(pathname, argv, envp) == -1)
+					exit(0);
+			}
 		}
+		exit(0);
 	}
 	else
 	{
@@ -65,12 +69,16 @@ void	handle_last_cmd(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	{
 		dup2(*prevpipe, STDIN_FILENO);
 		close(*prevpipe);
-		if (handle_builtin(argv, envp, env_lst) == -1)
+		if (handle_builtin_cp(argv, envp) == -1)
 		{
 			pathname = get_pathname(argv, env_lst);
-			if (execve(pathname, argv, envp) == -1)
-				exit(0);
+			if (pathname)
+			{
+				if (execve(pathname, argv, envp) == -1)
+					exit(0);
+			}
 		}
+		exit(0);
 	}
 	else
 	{
@@ -91,8 +99,9 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	{
 		if (token_lst->head->label == PIPE)
 			free(dequeue_token(token_lst));
-		envp = list_to_envp(env_lst);
 		argv = get_next_argv(token_lst);
+		envp = list_to_envp(env_lst);
+		env_lst = handle_builtin_pp(argv, envp, env_lst);
 		if (token_lst->head)
 			handle_pipe(argv, envp, env_lst, &prevpipe);
 		else

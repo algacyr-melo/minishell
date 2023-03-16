@@ -6,13 +6,13 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:53:30 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/15 16:25:42 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/15 23:29:53 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
- int pwd(void)
+void	pwd(void)
  {
      char    *buf;
  
