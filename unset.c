@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:00:34 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/16 01:36:25 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/16 11:34:17 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@ t_env	*remove_env(t_envl *env_lst, char *key)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
-			if (prev)
-				prev->next = tmp->next;
-			else
+			if (prev == NULL)
 				env_lst->head = tmp->next;
+			else
+			{
+				if (tmp->next == NULL)
+					env_lst->tail = prev;
+				prev->next = tmp->next;
+			}
 			env_lst->length--;
 			return (tmp);
 		}
