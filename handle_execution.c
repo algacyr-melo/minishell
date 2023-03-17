@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 15:43:57 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/17 16:13:46 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,22 @@ int	handle_redirect_out(t_tokenl *token_lst)
 	int	bkp;
 
 	free(dequeue_token(token_lst));
-	outfile = open(token_lst->head->content, O_WRONLY | O_CREAT | O_EXCL, 0644);
+	outfile = open(token_lst->head->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	free(dequeue_token(token_lst));
+	bkp = dup(STDOUT_FILENO);
+	dup2(outfile, STDOUT_FILENO);
+	close(outfile);
+	return (bkp);
+}
+
+int	handle_append(t_tokenl *token_lst)
+{
+	int	outfile;
+	int	bkp;
+
+	free(dequeue_token(token_lst));
+	free(dequeue_token(token_lst));
+	outfile = open(token_lst->head->content, O_WRONLY | O_APPEND);
 	free(dequeue_token(token_lst));
 	bkp = dup(STDOUT_FILENO);
 	dup2(outfile, STDOUT_FILENO);
@@ -131,6 +146,8 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 				handle_redirect_in(token_lst, prevpipe);
 			else if (token_lst->head->label == OUT)
 				bkp_stdout = handle_redirect_out(token_lst);
+			else if (token_lst->head->label == APPEND)
+				bkp_stdout = handle_append(token_lst);
 		}
 		env_lst = handle_builtin_pp(argv, envp, env_lst);
 		if (token_lst->pipe_count > 0)
