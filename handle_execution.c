@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 11:53:29 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/17 15:08:12 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,17 @@ void	handle_last_cmd(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	}
 }
 
+int	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
+{
+	int	fd_infile;
+
+	free(dequeue_token(token_lst));
+	fd_infile = open(token_lst->head->content, O_RDONLY);
+	free(dequeue_token(token_lst));
+	dup2(fd_infile, prevpipe);
+	return (fd_infile);
+}
+
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
 	char	**argv;
@@ -97,8 +108,13 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	prevpipe = dup(STDIN_FILENO);
 	while (token_lst->head)
 	{
-		argv = get_next_argv(token_lst);
 		envp = list_to_envp(env_lst);
+		argv = get_next_argv(token_lst);
+		if (token_lst->head)
+		{
+			if (token_lst->head->label == IN)
+				handle_redirect_in(token_lst, prevpipe);
+		}
 		env_lst = handle_builtin_pp(argv, envp, env_lst);
 		if (token_lst->pipe_count > 0)
 		{
