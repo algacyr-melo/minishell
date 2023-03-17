@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 15:08:12 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/17 15:43:57 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	handle_last_cmd(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	}
 }
 
-int	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
+void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 {
 	int	fd_infile;
 
@@ -96,7 +96,20 @@ int	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 	fd_infile = open(token_lst->head->content, O_RDONLY);
 	free(dequeue_token(token_lst));
 	dup2(fd_infile, prevpipe);
-	return (fd_infile);
+}
+
+int	handle_redirect_out(t_tokenl *token_lst)
+{
+	int	outfile;
+	int	bkp;
+
+	free(dequeue_token(token_lst));
+	outfile = open(token_lst->head->content, O_WRONLY | O_CREAT | O_EXCL, 0644);
+	free(dequeue_token(token_lst));
+	bkp = dup(STDOUT_FILENO);
+	dup2(outfile, STDOUT_FILENO);
+	close(outfile);
+	return (bkp);
 }
 
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
@@ -104,8 +117,10 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	char	**argv;
 	char	**envp;
 	int		prevpipe;
+	int		bkp_stdout;
 
 	prevpipe = dup(STDIN_FILENO);
+	bkp_stdout = dup(STDOUT_FILENO);
 	while (token_lst->head)
 	{
 		envp = list_to_envp(env_lst);
@@ -114,6 +129,8 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		{
 			if (token_lst->head->label == IN)
 				handle_redirect_in(token_lst, prevpipe);
+			else if (token_lst->head->label == OUT)
+				bkp_stdout = handle_redirect_out(token_lst);
 		}
 		env_lst = handle_builtin_pp(argv, envp, env_lst);
 		if (token_lst->pipe_count > 0)
@@ -123,6 +140,7 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		}
 		else
 			handle_last_cmd(argv, envp, env_lst, &prevpipe);
+		dup2(bkp_stdout, STDOUT_FILENO);
 		free(argv);
 		deep_free(envp);
 	}
