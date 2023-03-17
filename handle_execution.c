@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/16 01:39:41 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/17 11:53:29 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,14 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 	prevpipe = dup(STDIN_FILENO);
 	while (token_lst->head)
 	{
-		if (token_lst->head->label == PIPE)
-			free(dequeue_token(token_lst));
 		argv = get_next_argv(token_lst);
 		envp = list_to_envp(env_lst);
 		env_lst = handle_builtin_pp(argv, envp, env_lst);
-		if (token_lst->head)
+		if (token_lst->pipe_count > 0)
+		{
 			handle_pipe(argv, envp, env_lst, &prevpipe);
+			free(dequeue_token(token_lst));
+		}
 		else
 			handle_last_cmd(argv, envp, env_lst, &prevpipe);
 		free(argv);
