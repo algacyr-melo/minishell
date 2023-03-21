@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 12:11:59 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/11 17:14:05 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/17 11:54:34 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_token	*dequeue_token(t_tokenl *token_lst)
      t_token *head;
  
      head = token_lst->head;
+	 if (head->label == PIPE)
+		 token_lst->pipe_count--;
      if (token_lst->length > 1)
      {
          token_lst->head = head->next;
