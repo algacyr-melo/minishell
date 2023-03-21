@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:58:56 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 10:21:20 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 22:09:05 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static int	is_builtin(char *path)
 {
 	return (ft_strcmp(path, "cd") == 0
-			|| ft_strcmp(path, "export") == 0
-			|| ft_strcmp(path, "unset") == 0
-			|| ft_strcmp(path, "exit") == 0);
+		|| ft_strcmp(path, "export") == 0
+		|| ft_strcmp(path, "unset") == 0
+		|| ft_strcmp(path, "exit") == 0);
 }
 
 char	*get_pathname(char **argv, t_envl *env_lst)
