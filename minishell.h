@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 13:36:40 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 22:29:05 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
-#include <errno.h>
-#include <string.h>
+# include <errno.h>
+# include <string.h>
 
 # include "type.h"
 # include "libft/header/libft.h"

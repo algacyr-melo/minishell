@@ -6,15 +6,15 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:08:10 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/07 18:09:09 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 21:52:31 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int is_numeric_arg(char *arg)
+static int	is_numeric_arg(char *arg)
 {
-	size_t  i;
+	size_t	i;
 
 	i = 0;
 	while (arg[i])
@@ -26,9 +26,9 @@ static int is_numeric_arg(char *arg)
 	return (1);
 }
 
-void    ft_exit(int argc, char **argv)
+void	ft_exit(int argc, char **argv)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	if (argc == 2 && is_numeric_arg(argv[1]))

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:06:38 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/16 00:00:25 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 22:22:57 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	env(char **envp)
 {
-    size_t  i;
+	size_t	i;
 
-    i = 0;
-    while (envp[i])
-    {
-        ft_putendl_fd(envp[i], STDOUT_FILENO);
-        i++;
-    }
-    exit(0);
+	i = 0;
+	while (envp[i])
+	{
+		ft_putendl_fd(envp[i], STDOUT_FILENO);
+		i++;
+	}
+	exit(0);
 }
