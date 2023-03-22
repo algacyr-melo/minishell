@@ -29,10 +29,12 @@ CC		= gcc
 
 $(NAME)	: $(OBJ) minishell.h
 	make -C libft
-	$(CC) $(CFLAGS) $(OBJ) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -Llibft -lft -o $(NAME)
+	#$(CC) $(CFLAGS) $(OBJ) -L/Users/$(USER)/.brew/Cellar/readline/8.2.1/lib -lreadline -Llibft -lft -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -L/usr/local/opt/readline/lib -lreadline -Llibft -lft -o $(NAME)
 
 %.o		: %.c
-	$(CC) $(CFLAGS) -c $< -I/Users/$(USER)/.brew/Cellar/readline/8.2.1/include -o $@
+	#$(CC) $(CFLAGS) -c $< -I/Users/$(USER)/.brew/Cellar/readline/8.2.1/include -o $@
+	$(CC) $(CFLAGS) -c $< -I/usr/local/opt/readline/include -o $@
 
 all		: $(NAME)
 
@@ -43,5 +45,8 @@ fclean	: clean
 	$(RM) $(NAME)
 
 re		: fclean all
+
+r		: all
+	@./minishell
 
 .PHONY	: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:00:34 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/16 11:34:17 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 22:28:28 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_env	*remove_env(t_envl *env_lst, char *key)
 {
-	t_env   *tmp;
+	t_env	*tmp;
 	t_env	*prev;
 
 	tmp = env_lst->head;
@@ -40,10 +40,10 @@ t_env	*remove_env(t_envl *env_lst, char *key)
 	return (NULL);
 }
 
-int unset(char **argv, t_envl *env_lst)
+int	unset(char **argv, t_envl *env_lst)
 {
-	char    *key;
-	t_env   *tmp;
+	char	*key;
+	t_env	*tmp;
 	size_t	i;
 
 	i = 1;
