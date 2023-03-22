@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/20 20:46:33 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/21 22:31:57 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,40 @@ char	**get_keys(char *content)
 	return (keys);
 }
 
+int	is_quote(int c)
+{
+	return (c == '\"' || c == '\'');
+}
+
+size_t	parse_quote_count(char *content)
+{
+	size_t		count;
+	size_t		i;
+	enum e_bool	prevent_default;
+
+	prevent_default = FALSE;
+	count = 0;
+	i = 0;
+	while (content[i])
+	{
+		if (is_quote(content[i]))
+		{
+			if (content[i] == content[0])
+			{
+				if (prevent_default == FALSE)
+					prevent_default = TRUE;
+				else
+					prevent_default = FALSE;
+				count++;
+			}
+			else if (prevent_default == FALSE)
+				count++;
+		}
+		i++;
+	}
+	return (count);
+}
+
 size_t	new_content_len(char *content, t_envl *env_lst, char **keys)
 {
 	size_t	len_new_content;
@@ -104,6 +138,7 @@ size_t	new_content_len(char *content, t_envl *env_lst, char **keys)
 		}
 		i++;
 	}
+	len_new_content -= parse_quote_count(content);
 	return (len_new_content);
 }
 
@@ -122,21 +157,23 @@ void	ft_strcpy(char *dst, char *src)
 
 char	*parse_content(char *content, t_envl *env_lst)
 {
-	char	**keys;
-	char	*new_content;
-	size_t	len_new_content;
-	size_t	i;
-	size_t	i_keys;
-	size_t	i_new;
-	t_env	*tmp;
+	char		**keys;
+	char		*new_content;
+	size_t		len_new_content;
+	size_t		i;
+	size_t		i_keys;
+	size_t		i_new;
+	t_env		*tmp;
+	enum e_bool	prevent_default;
 
+	prevent_default = FALSE;
 	keys = get_keys(content);
 	len_new_content = new_content_len(content, env_lst, keys);
 	new_content = malloc((len_new_content + 1) * sizeof(*new_content));
 	i_keys = 0;
 	i_new = 0;
 	i = 0;
-	while (content[i])
+	while (i_new < len_new_content)
 	{
 		if (content[i] == '$' && get_env(env_lst, keys[i_keys]))
 		{
@@ -146,11 +183,27 @@ char	*parse_content(char *content, t_envl *env_lst)
 			i_new += ft_strlen(tmp->value);
 			i_keys++;
 		}
+		else if (is_quote(content[i]))
+		{
+			if (content[i] == content[0])
+			{
+				if (prevent_default == FALSE)
+					prevent_default = TRUE;
+				else
+					prevent_default = FALSE;
+			}
+			else if (prevent_default == TRUE)
+			{
+				new_content[i_new] = content[i];
+				i_new++;
+			}
+			i++;
+		}
 		else
 		{
 			new_content[i_new] = content[i];
-			i++;
 			i_new++;
+			i++;
 		}
 	}
 	new_content[i_new] = '\0';
@@ -160,13 +213,14 @@ char	*parse_content(char *content, t_envl *env_lst)
 void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 {
 	t_token		*tmp;
-	//enum e_bool	prevent_default;
 
-	//prevent_default = FALSE;
+	(void)env_lst;
 	tmp = token_lst->head;
 	while (tmp)
 	{
-		if (tmp->label == WORD && ft_strchr(tmp->content, '$'))
+		if (tmp->label == WORD
+			&& ((ft_strchr(tmp->content, '\'') || ft_strchr(tmp->content, '\"'))
+			|| ft_strchr(tmp->content, '$')))
 			tmp->content = parse_content(tmp->content, env_lst);
 		tmp = tmp->next;
 	}
