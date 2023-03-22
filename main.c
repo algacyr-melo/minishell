@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/21 22:31:57 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/22 19:27:23 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void	init_lexer_state(t_lexer_state *state, char *input_copy)
 {
-	state->input_copy = input_copy;
-	state->start = 0;
+	state->input = input_copy;
+	state->curr = 0;
 	state->is_word = FALSE;
 	state->is_quoted = FALSE;
 }
@@ -248,7 +248,7 @@ int	main(int argc, char **argv, char **envp)
 		parse_tokens(&token_lst, &env_lst);
 		handle_execution(&token_lst, &env_lst);
 		free(input);
-		free(lexer_state.input_copy);
+		free(lexer_state.input);
 	}
 	return (0);
 }

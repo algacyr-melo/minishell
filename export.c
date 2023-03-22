@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:56:07 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/20 21:54:07 by dioda-si         ###   ########.fr       */
+/*   Updated: 2023/03/22 19:50:53 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@ static void	print_envl(char **envp)
 		ft_putendl_fd(envp[i], STDOUT_FILENO);
 		i++;
 	}
+}
+
+static void	update_env(t_env *tmp, char *key, char *value)
+{
+	free(key);
+	free(tmp->value);
+	tmp->value = value;
 }
 
 int	ft_export(int argc, char **argv, char **envp, t_envl *env_lst)
@@ -43,11 +50,7 @@ int	ft_export(int argc, char **argv, char **envp, t_envl *env_lst)
 		}
 		tmp = get_env(env_lst, key);
 		if (tmp)
-		{
-			free(key);
-			free(tmp->value);
-			tmp->value = value;
-		}
+			update_env(tmp, key, value);
 		else
 			queue_env(env_lst, new_env(key, value));
 		i++;

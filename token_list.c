@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/22 16:16:14 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/22 19:28:05 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted)
 		quote = input[i];
 		is_quoted = TRUE;
 	}
-	else if (input[i] == quote && (is_metachar(input[i + 1]) || input[i + 1] == '\0') && is_quoted)
+	else if (input[i] == quote
+		&& (is_metachar(input[i + 1]) || input[i + 1] == '\0')
+		&& is_quoted)
 		is_quoted = FALSE;
 	return (is_quoted);
 }
@@ -70,8 +72,8 @@ void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 		if ((is_metachar(input[i]) || input[i] == '\0')
 			&& (state->is_word && !state->is_quoted))
 		{
-			state->input_copy[i] = '\0';
-			queue_token(token_lst, new_token(state->input_copy + state->start, WORD));
+			state->input[i] = '\0';
+			queue_token(token_lst, new_token(state->input + state->curr, WORD));
 			if (is_operator(input[i]))
 				queue_token(token_lst, new_token(NULL, get_label(input, i)));
 			state->is_word = FALSE;
@@ -81,7 +83,7 @@ void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 		if (!(is_metachar(input[i])) && !state->is_word && input[i] != '\0')
 		{
 			state->is_word = TRUE;
-			state->start = i;
+			state->curr = i;
 		}
 		i++;
 	}
