@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 16:13:46 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/22 20:22:34 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,23 @@ static void	deep_free(char **envp)
 	free(envp);
 }
 
-void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
+static void	set_pipe_io(int *pipefd, int *prevpipe)
+{
+	close(pipefd[0]);
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[1]);
+	dup2(*prevpipe, STDIN_FILENO);
+	close(*prevpipe);
+}
+
+static void	set_output_to_prevpipe(int *pipefd, int *prevpipe)
+{
+	close(pipefd[1]);
+	close(*prevpipe);
+	*prevpipe = pipefd[0];
+}
+
+void	ft_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 {
 	pid_t	pid;
 	int		pipefd[2];
@@ -35,11 +51,7 @@ void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	pid = fork();
 	if (pid == 0)
 	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-		dup2(*prevpipe, STDIN_FILENO);
-		close(*prevpipe);
+		set_pipe_io(pipefd, prevpipe);
 		if (handle_builtin_cp(argv, envp) == -1)
 		{
 			pathname = get_pathname(argv, env_lst);
@@ -52,14 +64,10 @@ void	handle_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 		exit(0);
 	}
 	else
-	{
-		close(pipefd[1]);
-		close(*prevpipe);
-		*prevpipe = pipefd[0];
-	}
+		set_output_to_prevpipe(pipefd, prevpipe);
 }
 
-void	handle_last_cmd(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
+void	ft_last(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 {
 	pid_t	pid;
 	char	*pathname;
@@ -100,11 +108,13 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 
 int	handle_redirect_out(t_tokenl *token_lst)
 {
-	int	outfile;
-	int	bkp;
+	int		outfile;
+	int		bkp;
+	t_token	*head;
 
 	free(dequeue_token(token_lst));
-	outfile = open(token_lst->head->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	head = token_lst->head;
+	outfile = open(head->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	free(dequeue_token(token_lst));
 	bkp = dup(STDOUT_FILENO);
 	dup2(outfile, STDOUT_FILENO);
@@ -152,11 +162,11 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		env_lst = handle_builtin_pp(argv, envp, env_lst);
 		if (token_lst->pipe_count > 0)
 		{
-			handle_pipe(argv, envp, env_lst, &prevpipe);
+			ft_pipe(argv, envp, env_lst, &prevpipe);
 			free(dequeue_token(token_lst));
 		}
 		else
-			handle_last_cmd(argv, envp, env_lst, &prevpipe);
+			ft_last(argv, envp, env_lst, &prevpipe);
 		dup2(bkp_stdout, STDOUT_FILENO);
 		free(argv);
 		deep_free(envp);
