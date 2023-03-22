@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   token_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/04 11:53:44 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/22 16:16:14 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,16 @@ static enum e_label	get_label(char *input, size_t i)
 		return (WORD);
 }
 
-static enum e_bool	get_quote_state(int c, enum e_bool is_quoted)
+static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted)
 {
-	if ((c == '"' || c == '\'') && !is_quoted)
+	static char	quote;
+
+	if ((input[i] == '\"' || input[i] == '\'') && !is_quoted)
+	{
+		quote = input[i];
 		is_quoted = TRUE;
-	else if ((c == '"' || c == '\'') && is_quoted)
+	}
+	else if (input[i] == quote && (is_metachar(input[i + 1]) || input[i + 1] == '\0') && is_quoted)
 		is_quoted = FALSE;
 	return (is_quoted);
 }
@@ -61,7 +66,7 @@ void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 	i = 0;
 	while (i <= ft_strlen(input))
 	{
-		state->is_quoted = get_quote_state(input[i], state->is_quoted);
+		state->is_quoted = get_quote_state(input, i, state->is_quoted);
 		if ((is_metachar(input[i]) || input[i] == '\0')
 			&& (state->is_word && !state->is_quoted))
 		{
