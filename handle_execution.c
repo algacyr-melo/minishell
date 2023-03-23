@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/22 20:22:34 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/22 20:52:02 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,20 @@ int	handle_append(t_tokenl *token_lst)
 	return (bkp);
 }
 
+int	handle_redirect(t_tokenl *token_lst, int *prevpipe)
+{
+	int	bkp_stdout;
+
+	bkp_stdout = dup(STDOUT_FILENO);
+	if (token_lst->head->label == IN)
+		handle_redirect_in(token_lst, *prevpipe);
+	else if (token_lst->head->label == OUT)
+		bkp_stdout = handle_redirect_out(token_lst);
+	else if (token_lst->head->label == APPEND)
+		bkp_stdout = handle_append(token_lst);
+	return (bkp_stdout);
+}
+
 void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 {
 	char	**argv;
@@ -151,14 +165,7 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		envp = list_to_envp(env_lst);
 		argv = get_next_argv(token_lst);
 		if (token_lst->head)
-		{
-			if (token_lst->head->label == IN)
-				handle_redirect_in(token_lst, prevpipe);
-			else if (token_lst->head->label == OUT)
-				bkp_stdout = handle_redirect_out(token_lst);
-			else if (token_lst->head->label == APPEND)
-				bkp_stdout = handle_append(token_lst);
-		}
+			bkp_stdout = handle_redirect(token_lst, &prevpipe);
 		env_lst = handle_builtin_pp(argv, envp, env_lst);
 		if (token_lst->pipe_count > 0)
 		{

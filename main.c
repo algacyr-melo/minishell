@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/22 19:27:23 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/22 21:09:45 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,12 @@ char	*parse_content(char *content, t_envl *env_lst)
 	return (new_content);
 }
 
+static int	str_quote(char *content)
+{
+	return (ft_strchr(content, '\'')
+		|| ft_strchr(content, '\"'));
+}
+
 void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 {
 	t_token		*tmp;
@@ -219,8 +225,7 @@ void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 	while (tmp)
 	{
 		if (tmp->label == WORD
-			&& ((ft_strchr(tmp->content, '\'') || ft_strchr(tmp->content, '\"'))
-			|| ft_strchr(tmp->content, '$')))
+			&& (str_quote(tmp->content) || ft_strchr(tmp->content, '$')))
 			tmp->content = parse_content(tmp->content, env_lst);
 		tmp = tmp->next;
 	}
