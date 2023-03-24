@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/22 19:28:05 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/24 14:30:14 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted)
 		quote = input[i];
 		is_quoted = TRUE;
 	}
-	else if (input[i] == quote
-		&& (is_metachar(input[i + 1]) || input[i + 1] == '\0')
-		&& is_quoted)
+	else if (input[i] == quote && is_quoted)
 		is_quoted = FALSE;
 	return (is_quoted);
 }

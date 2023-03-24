@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/22 21:09:45 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/24 14:38:13 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,12 +210,6 @@ char	*parse_content(char *content, t_envl *env_lst)
 	return (new_content);
 }
 
-static int	str_quote(char *content)
-{
-	return (ft_strchr(content, '\'')
-		|| ft_strchr(content, '\"'));
-}
-
 void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 {
 	t_token		*tmp;
@@ -224,9 +218,9 @@ void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 	tmp = token_lst->head;
 	while (tmp)
 	{
-		if (tmp->label == WORD
-			&& (str_quote(tmp->content) || ft_strchr(tmp->content, '$')))
-			tmp->content = parse_content(tmp->content, env_lst);
+		if (tmp->label == WORD)
+			printf("%s\n", (char *)tmp->content);
+			//tmp->content = parse_content(tmp->content, env_lst);
 		tmp = tmp->next;
 	}
 }
@@ -250,7 +244,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(input);
 		init_lexer_state(&lexer_state, ft_strdup(input));
 		tokenize_input(&token_lst, input, &lexer_state);
-		parse_tokens(&token_lst, &env_lst);
+		//parse_tokens(&token_lst, &env_lst);
 		handle_execution(&token_lst, &env_lst);
 		free(input);
 		free(lexer_state.input);
