@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/24 14:38:13 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/25 15:52:54 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,10 @@ char	*parse_content(char *content, t_envl *env_lst)
 	size_t		i_new;
 	t_env		*tmp;
 	enum e_bool	prevent_default;
+	enum e_bool	prevent_expand;
 
 	prevent_default = FALSE;
+	prevent_expand = FALSE;
 	keys = get_keys(content);
 	len_new_content = new_content_len(content, env_lst, keys);
 	new_content = malloc((len_new_content + 1) * sizeof(*new_content));
@@ -175,15 +177,7 @@ char	*parse_content(char *content, t_envl *env_lst)
 	i = 0;
 	while (i_new < len_new_content)
 	{
-		if (content[i] == '$' && get_env(env_lst, keys[i_keys]))
-		{
-			tmp = get_env(env_lst, keys[i_keys]);
-			ft_strcpy(&new_content[i_new], tmp->value);
-			i += ft_strlen(tmp->key) + 1;
-			i_new += ft_strlen(tmp->value);
-			i_keys++;
-		}
-		else if (is_quote(content[i]))
+		if (is_quote(content[i]))
 		{
 			if (content[i] == content[0])
 			{
@@ -192,12 +186,29 @@ char	*parse_content(char *content, t_envl *env_lst)
 				else
 					prevent_default = FALSE;
 			}
-			else if (prevent_default == TRUE)
+			if (content[i] == '\'')
+			{
+				if (prevent_expand == FALSE)
+					prevent_expand = TRUE;
+				else
+					prevent_expand = FALSE;
+			}
+			if (prevent_default == TRUE && content[i] != content[0])
 			{
 				new_content[i_new] = content[i];
 				i_new++;
 			}
 			i++;
+		}
+		else if ((content[i] == '$' && prevent_expand == FALSE)
+				|| ((prevent_default && prevent_expand == FALSE) && content[0] == '\'')
+				|| ((prevent_default && prevent_expand == TRUE) && content[0] == '\"'))
+		{
+			tmp = get_env(env_lst, keys[i_keys]);
+			ft_strcpy(&new_content[i_new], tmp->value);
+			i += ft_strlen(tmp->key) + 1;
+			i_new += ft_strlen(tmp->value);
+			i_keys++;
 		}
 		else
 		{
@@ -219,8 +230,8 @@ void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 	while (tmp)
 	{
 		if (tmp->label == WORD)
-			printf("%s\n", (char *)tmp->content);
-			//tmp->content = parse_content(tmp->content, env_lst);
+			tmp->content = parse_content(tmp->content, env_lst);
+			//printf("%s\n", (char *)tmp->content);
 		tmp = tmp->next;
 	}
 }
@@ -244,7 +255,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(input);
 		init_lexer_state(&lexer_state, ft_strdup(input));
 		tokenize_input(&token_lst, input, &lexer_state);
-		//parse_tokens(&token_lst, &env_lst);
+		parse_tokens(&token_lst, &env_lst);
 		handle_execution(&token_lst, &env_lst);
 		free(input);
 		free(lexer_state.input);
