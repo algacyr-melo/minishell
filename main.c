@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/25 15:52:54 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/27 15:29:32 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,47 @@ void	handle_exit(t_envl *env_lst, int status)
 	exit(status);
 }
 
+int	is_quote(int c)
+{
+	return (c == '\"' || c == '\'');
+}
+
+void	update_parser_state(char *content, size_t i, t_parser_state *state)
+{
+	if (content[i] == content[0])
+	{
+		if (state->prevent_default == FALSE)
+			state->prevent_default = TRUE;
+		else
+			state->prevent_default = FALSE;
+	}
+	if (content[i] == '\'')
+	{
+		if (state->prevent_expand == FALSE)
+			state->prevent_expand = TRUE;
+		else
+			state->prevent_expand = FALSE;
+	}
+}
+
 size_t	keys_len(char *content)
 {
-	size_t	len;
-	size_t	i;
+	size_t			len;
+	size_t			i;
+	t_parser_state	state;
 
+	state.prevent_default = FALSE;
+	state.prevent_expand = FALSE;
 	len = 0;
 	i = 0;
 	while (content[i])
 	{
-		if (content[i] == '$')
+		if (is_quote(content[i]))
+			update_parser_state(content, i, &state);
+		else if ((content[i] == '$')
+			&& ((state.prevent_expand == FALSE)
+			|| ((state.prevent_default && state.prevent_expand == FALSE) && content[0] == '\'')
+			|| ((state.prevent_default && state.prevent_expand == TRUE) && content[0] == '\"')))
 			len++;
 		i++;
 	}
@@ -81,11 +112,6 @@ char	**get_keys(char *content)
 	}
 	keys[i_keys] = NULL;
 	return (keys);
-}
-
-int	is_quote(int c)
-{
-	return (c == '\"' || c == '\'');
 }
 
 size_t	parse_quote_count(char *content)
@@ -164,11 +190,10 @@ char	*parse_content(char *content, t_envl *env_lst)
 	size_t		i_keys;
 	size_t		i_new;
 	t_env		*tmp;
-	enum e_bool	prevent_default;
-	enum e_bool	prevent_expand;
+	t_parser_state	parser_state;
 
-	prevent_default = FALSE;
-	prevent_expand = FALSE;
+	parser_state.prevent_default = FALSE;
+	parser_state.prevent_expand = FALSE;
 	keys = get_keys(content);
 	len_new_content = new_content_len(content, env_lst, keys);
 	new_content = malloc((len_new_content + 1) * sizeof(*new_content));
@@ -179,30 +204,18 @@ char	*parse_content(char *content, t_envl *env_lst)
 	{
 		if (is_quote(content[i]))
 		{
-			if (content[i] == content[0])
-			{
-				if (prevent_default == FALSE)
-					prevent_default = TRUE;
-				else
-					prevent_default = FALSE;
-			}
-			if (content[i] == '\'')
-			{
-				if (prevent_expand == FALSE)
-					prevent_expand = TRUE;
-				else
-					prevent_expand = FALSE;
-			}
-			if (prevent_default == TRUE && content[i] != content[0])
+			update_parser_state(content, i, &parser_state);
+			if (parser_state.prevent_default == TRUE && content[i] != content[0])
 			{
 				new_content[i_new] = content[i];
 				i_new++;
 			}
 			i++;
 		}
-		else if ((content[i] == '$' && prevent_expand == FALSE)
-				|| ((prevent_default && prevent_expand == FALSE) && content[0] == '\'')
-				|| ((prevent_default && prevent_expand == TRUE) && content[0] == '\"'))
+		else if ((content[i] == '$')
+				&& ((parser_state.prevent_expand == FALSE)
+				|| ((parser_state.prevent_default && parser_state.prevent_expand == FALSE) && content[0] == '\'')
+				|| ((parser_state.prevent_default && parser_state.prevent_expand == TRUE) && content[0] == '\"')))
 		{
 			tmp = get_env(env_lst, keys[i_keys]);
 			ft_strcpy(&new_content[i_new], tmp->value);
