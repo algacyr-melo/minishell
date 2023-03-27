@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/27 15:10:00 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/27 20:35:21 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,18 @@ typedef struct s_lexer_state
 
 typedef struct s_parser_state
 {
+	char		**keys;
+	char		*new;
+	size_t		len_new;
 	enum e_bool	prevent_default;
 	enum e_bool	prevent_expand;
 }				t_parser_state;
+
+typedef struct s_index
+{
+	size_t	old;
+	size_t	new;
+	size_t	key;
+}			t_index;
 
 #endif

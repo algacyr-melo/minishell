@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/27 15:29:32 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/27 20:44:35 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,10 @@ size_t	keys_len(char *content)
 			update_parser_state(content, i, &state);
 		else if ((content[i] == '$')
 			&& ((state.prevent_expand == FALSE)
-			|| ((state.prevent_default && state.prevent_expand == FALSE) && content[0] == '\'')
-			|| ((state.prevent_default && state.prevent_expand == TRUE) && content[0] == '\"')))
+				|| ((state.prevent_default && state.prevent_expand == FALSE)
+					&& content[0] == '\'')
+				|| ((state.prevent_default && state.prevent_expand == TRUE)
+					&& content[0] == '\"')))
 			len++;
 		i++;
 	}
@@ -181,57 +183,73 @@ void	ft_strcpy(char *dst, char *src)
 	dst[i] = '\0';
 }
 
+void	copy_quote(char *new_content, char *content, t_index *i)
+{
+	new_content[i->new] = content[i->old];
+	i->new++;
+}
+
+void	copy_char(char *new_content, char *content, t_index *i)
+{
+	new_content[i->new] = content[i->old];
+	i->new++;
+	i->old++;
+}
+
+void	expand_variable(t_envl *env_lst, char *key, char *new, t_index *i)
+{
+	t_env	*tmp;
+
+	tmp = get_env(env_lst, key);
+	ft_strcpy(&new[i->new], tmp->value);
+	i->old += ft_strlen(tmp->key) + 1;
+	i->new += ft_strlen(tmp->value);
+	i->key++;
+}
+
+void	init_index(t_index *i)
+{
+	i->key = 0;
+	i->new = 0;
+	i->old = 0;
+}
+
+void	init_parser_state(t_parser_state *state, char *content, t_envl *env_lst)
+{
+	state->prevent_default = FALSE;
+	state->prevent_expand = FALSE;
+	state->keys = get_keys(content);
+	state->len_new = new_content_len(content, env_lst, state->keys);
+	state->new = malloc((state->len_new + 1) * sizeof(char));
+}
+
+// Fix new_content_len
 char	*parse_content(char *content, t_envl *env_lst)
 {
-	char		**keys;
-	char		*new_content;
-	size_t		len_new_content;
-	size_t		i;
-	size_t		i_keys;
-	size_t		i_new;
-	t_env		*tmp;
-	t_parser_state	parser_state;
+	t_parser_state	state;
+	t_index			i;
 
-	parser_state.prevent_default = FALSE;
-	parser_state.prevent_expand = FALSE;
-	keys = get_keys(content);
-	len_new_content = new_content_len(content, env_lst, keys);
-	new_content = malloc((len_new_content + 1) * sizeof(*new_content));
-	i_keys = 0;
-	i_new = 0;
-	i = 0;
-	while (i_new < len_new_content)
+	init_parser_state(&state, content, env_lst);
+	init_index(&i);
+	while (i.new < state.len_new)
 	{
-		if (is_quote(content[i]))
+		if (is_quote(content[i.old]))
 		{
-			update_parser_state(content, i, &parser_state);
-			if (parser_state.prevent_default == TRUE && content[i] != content[0])
-			{
-				new_content[i_new] = content[i];
-				i_new++;
-			}
-			i++;
+			update_parser_state(content, i.old, &state);
+			if (state.prevent_default == TRUE && content[i.old] != content[0])
+				copy_quote(state.new, content, &i);
+			i.old++;
 		}
-		else if ((content[i] == '$')
-				&& ((parser_state.prevent_expand == FALSE)
-				|| ((parser_state.prevent_default && parser_state.prevent_expand == FALSE) && content[0] == '\'')
-				|| ((parser_state.prevent_default && parser_state.prevent_expand == TRUE) && content[0] == '\"')))
-		{
-			tmp = get_env(env_lst, keys[i_keys]);
-			ft_strcpy(&new_content[i_new], tmp->value);
-			i += ft_strlen(tmp->key) + 1;
-			i_new += ft_strlen(tmp->value);
-			i_keys++;
-		}
+		else if ((content[i.old] == '$')
+			&& ((state.prevent_expand == FALSE)
+				|| ((state.prevent_default && state.prevent_expand == TRUE)
+					&& content[0] == '\"')))
+			expand_variable(env_lst, state.keys[i.key], state.new, &i);
 		else
-		{
-			new_content[i_new] = content[i];
-			i_new++;
-			i++;
-		}
+			copy_char(state.new, content, &i);
 	}
-	new_content[i_new] = '\0';
-	return (new_content);
+	state.new[i.new] = '\0';
+	return (state.new);
 }
 
 void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
@@ -244,7 +262,6 @@ void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 	{
 		if (tmp->label == WORD)
 			tmp->content = parse_content(tmp->content, env_lst);
-			//printf("%s\n", (char *)tmp->content);
 		tmp = tmp->next;
 	}
 }
