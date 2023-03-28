@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/28 17:05:09 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/28 18:17:33 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,11 +218,9 @@ void	init_parser_state(t_parser_state *state, char *content, t_envl *env_lst)
 	state->prevent_expand = FALSE;
 	state->keys = get_keys(content);
 	state->len_new = new_content_len(content, env_lst, state->keys);
-	//state->new = malloc((state->len_new + 1) * sizeof(char));
-	state->new = malloc((1000000) * sizeof(char));
+	state->new = malloc((state->len_new + 1) * sizeof(char));
 }
 
-// Fix new_content_len
 char	*parse_content(char *content, t_envl *env_lst)
 {
 	t_parser_state	state;
@@ -255,7 +253,6 @@ void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst)
 {
 	t_token		*tmp;
 
-	(void)env_lst;
 	tmp = token_lst->head;
 	while (tmp)
 	{
