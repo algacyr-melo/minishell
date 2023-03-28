@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/27 20:44:35 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/28 17:05:09 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	update_parser_state(char *content, size_t i, t_parser_state *state)
 	}
 }
 
-size_t	keys_len(char *content)
+size_t	count_keys(char *content)
 {
 	size_t			len;
 	size_t			i;
@@ -66,8 +66,6 @@ size_t	keys_len(char *content)
 			update_parser_state(content, i, &state);
 		else if ((content[i] == '$')
 			&& ((state.prevent_expand == FALSE)
-				|| ((state.prevent_default && state.prevent_expand == FALSE)
-					&& content[0] == '\'')
 				|| ((state.prevent_default && state.prevent_expand == TRUE)
 					&& content[0] == '\"')))
 			len++;
@@ -76,44 +74,51 @@ size_t	keys_len(char *content)
 	return (len);
 }
 
+void	init_index(t_index *i)
+{
+	i->key = 0;
+	i->new = 0;
+	i->old = 0;
+	i->start = 0;
+}
+
+void	handle_key(char *content, char **keys, t_index *i, enum e_bool *is_key)
+{
+	if (*is_key == FALSE)
+		*is_key = TRUE;
+	else if (*is_key == TRUE)
+	{
+		keys[i->key] = ft_substr(content, i->start, i->old - i->start);
+		i->key++;
+	}
+	i->start = i->old + 1;
+}
+
 char	**get_keys(char *content)
 {
-	char		**keys;
-	size_t		start;
-	size_t		i;
-	size_t		i_keys;
-	size_t		len;
+	char		**key;
+	size_t		key_counter;
+	t_index		i;
 	enum e_bool	is_key;
 
-	len = keys_len(content);
-	keys = malloc((len + 1) * sizeof(*keys));
-	start = 0;
-	i = 0;
-	i_keys = 0;
+	key_counter = count_keys(content);
+	key = malloc((key_counter + 1) * sizeof(*key));
+	init_index(&i);
 	is_key = FALSE;
-	while (i_keys < len)
+	while (i.key < key_counter)
 	{
-		if (content[i] == '$')
+		if (content[i.old] == '$')
+			handle_key(content, key, &i, &is_key);
+		else if (!ft_isalnum(content[i.old]) && is_key == TRUE)
 		{
-			if (is_key == FALSE)
-				is_key = TRUE;
-			else if (is_key == TRUE)
-			{
-				keys[i_keys] = ft_substr(content, start, i - start);
-				i_keys++;
-			}
-			start = i + 1;
-		}
-		else if (!ft_isalnum(content[i]) && is_key == TRUE)
-		{
-			keys[i_keys] = ft_substr(content, start, i - start);
-			i_keys++;
+			key[i.key] = ft_substr(content, i.start, i.old - i.start);
+			i.key++;
 			is_key = FALSE;
 		}
-		i++;
+		i.old++;
 	}
-	keys[i_keys] = NULL;
-	return (keys);
+	key[i.key] = NULL;
+	return (key);
 }
 
 size_t	parse_quote_count(char *content)
@@ -207,20 +212,14 @@ void	expand_variable(t_envl *env_lst, char *key, char *new, t_index *i)
 	i->key++;
 }
 
-void	init_index(t_index *i)
-{
-	i->key = 0;
-	i->new = 0;
-	i->old = 0;
-}
-
 void	init_parser_state(t_parser_state *state, char *content, t_envl *env_lst)
 {
 	state->prevent_default = FALSE;
 	state->prevent_expand = FALSE;
 	state->keys = get_keys(content);
 	state->len_new = new_content_len(content, env_lst, state->keys);
-	state->new = malloc((state->len_new + 1) * sizeof(char));
+	//state->new = malloc((state->len_new + 1) * sizeof(char));
+	state->new = malloc((1000000) * sizeof(char));
 }
 
 // Fix new_content_len
