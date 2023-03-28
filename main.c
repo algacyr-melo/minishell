@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/28 20:07:45 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/28 20:34:27 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,51 +94,60 @@ void	handle_key(char *content, char **keys, t_index *i, enum e_bool *is_key)
 	i->start = i->old + 1;
 }
 
+void	init_quote_state(t_quote_state *state)
+{
+	state->prevent_default = FALSE;
+	state->prevent_expand = FALSE;
+}
+
+void	update_quote_state(char *content, t_index *i, t_quote_state *state)
+{
+	if (content[i->old] == content[0])
+	{
+		if (state->prevent_default == FALSE)
+			state->prevent_default = TRUE;
+		else
+			state->prevent_default = FALSE;
+	}
+	if (content[i->old] == '\'')
+	{
+		if (state->prevent_expand == FALSE)
+			state->prevent_expand = TRUE;
+		else
+			state->prevent_expand = FALSE;
+	}
+}
+
+void	save_switch(char *content, char **key, t_index *i, enum e_bool *is_key)
+{
+	key[i->key] = ft_substr(content, i->start, i->old - i->start);
+	i->key++;
+	*is_key = FALSE;
+}
+
 char	**get_keys(char *content)
 {
-	char		**key;
-	size_t		key_counter;
-	t_index		i;
-	enum e_bool	is_key;
-	enum e_bool	prevent_default;
-	enum e_bool	prevent_expand;
+	char			**key;
+	size_t			key_counter;
+	t_index			i;
+	enum e_bool		is_key;
+	t_quote_state	state;
 
-	prevent_default = FALSE;
-	prevent_expand = FALSE;
-	key_counter = count_keys(content);
-	key = malloc((key_counter + 1) * sizeof(*key));
+	init_quote_state(&state);
 	init_index(&i);
 	is_key = FALSE;
+	key_counter = count_keys(content);
+	key = malloc((key_counter + 1) * sizeof(*key));
 	while (i.key < key_counter)
 	{
 		if (is_quote(content[i.old]))
-		{
-			if (content[i.old] == content[0])
-			{
-				if (prevent_default == FALSE)
-					prevent_default = TRUE;
-				else
-					prevent_default = FALSE;
-			}
-			if (content[i.old] == '\'')
-			{
-				if (prevent_expand == FALSE)
-					prevent_expand = TRUE;
-				else
-					prevent_expand = FALSE;
-			}
-		}
-		if ((content[i.old] == '$')
-			&& ((prevent_expand == FALSE)
-				|| ((prevent_default && prevent_expand == TRUE)
+			update_quote_state(content, &i, &state);
+		if ((content[i.old] == '$') && ((state.prevent_expand == FALSE)
+				|| ((state.prevent_default && state.prevent_expand == TRUE)
 					&& content[0] == '\"')))
 			handle_key(content, key, &i, &is_key);
 		else if (!ft_isalnum(content[i.old]) && is_key == TRUE)
-		{
-			key[i.key] = ft_substr(content, i.start, i.old - i.start);
-			i.key++;
-			is_key = FALSE;
-		}
+			save_switch(content, key, &i, &is_key);
 		i.old++;
 	}
 	key[i.key] = NULL;

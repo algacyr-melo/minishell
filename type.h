@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/28 15:53:58 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/28 20:15:13 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,11 @@ typedef struct s_index
 	size_t	key;
 	size_t	start;
 }			t_index;
+
+typedef struct s_quote_state
+{
+	enum e_bool	prevent_default;
+	enum e_bool	prevent_expand;
+}				t_quote_state;
 
 #endif
