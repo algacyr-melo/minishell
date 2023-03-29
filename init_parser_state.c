@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 17:02:45 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/29 18:46:59 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/29 18:59:42 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ size_t	new_content_len(char *content, t_envl *env_lst, char **keys)
 		}
 		i++;
 	}
-	printf("%ld\n", len_new_content);
 	len_new_content -= parse_quote_count(content);
-	printf("%ld\n", len_new_content);
 	return (len_new_content);
 }
 
