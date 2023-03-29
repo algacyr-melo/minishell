@@ -6,6 +6,12 @@ SRC		= main.c \
 		  env_list.c \
 		  token_queue.c \
 		  token_list.c \
+		  parse_tokens.c \
+		  parser_quote.c \
+		  parser_expand.c \
+		  utils.c \
+		  init_parser_state.c \
+		  update_parser_state.c \
 		  handle_execution.c \
 		  get_next_argv.c \
 		  list_to_envp.c \
