@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/24 14:30:14 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:52:04 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,29 +44,65 @@ static enum e_label	get_label(char *input, size_t i)
 		return (WORD);
 }
 
-static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted)
+static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted, size_t *quote_counter)
 {
-	static char	quote;
+	static char		quote;
 
-	if ((input[i] == '\"' || input[i] == '\'') && !is_quoted)
+	if (is_quote(input[i]))
 	{
-		quote = input[i];
-		is_quoted = TRUE;
+		if (!is_quoted)
+		{
+			quote = input[i];
+			is_quoted = TRUE;
+		}
+		if (is_quoted && input[i] == quote)
+			*quote_counter -= 1;
+		if (*quote_counter == 0)
+			is_quoted = FALSE;
+		i++;
 	}
-	else if (input[i] == quote && is_quoted)
-		is_quoted = FALSE;
 	return (is_quoted);
+}
+
+size_t	count_quote(char *input)
+{
+	size_t		counter;
+	size_t		i;
+	char		quote;
+	enum e_bool	is_quoted;
+
+	is_quoted = FALSE;
+	counter = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (is_quote(input[i]))
+		{
+			if (!is_quoted)
+			{
+				quote = input[i];
+				is_quoted = TRUE;
+				counter++;
+			}
+			else if (is_quoted && input[i] == quote)
+				counter++;
+		}
+		i++;
+	}
+	return (counter);
 }
 
 void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 {
 	size_t			i;
+	static size_t	quote_counter;
 
 	token_lst->head = NULL;
+	quote_counter = count_quote(input);
 	i = 0;
 	while (i <= ft_strlen(input))
 	{
-		state->is_quoted = get_quote_state(input, i, state->is_quoted);
+		state->is_quoted = get_quote_state(input, i, state->is_quoted, &quote_counter);
 		if ((is_metachar(input[i]) || input[i] == '\0')
 			&& (state->is_word && !state->is_quoted))
 		{
