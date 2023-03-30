@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/29 22:52:04 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/30 15:14:05 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static enum e_label	get_label(char *input, size_t i)
 		return (WORD);
 }
 
-static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted, size_t *quote_counter)
+enum e_bool	get_state(char *input, int i, enum e_bool is_quoted, size_t *count)
 {
 	static char		quote;
 
@@ -56,8 +56,8 @@ static enum e_bool	get_quote_state(char *input, int i, enum e_bool is_quoted, si
 			is_quoted = TRUE;
 		}
 		if (is_quoted && input[i] == quote)
-			*quote_counter -= 1;
-		if (*quote_counter == 0)
+			*count -= 1;
+		if (*count == 0)
 			is_quoted = FALSE;
 		i++;
 	}
@@ -92,17 +92,23 @@ size_t	count_quote(char *input)
 	return (counter);
 }
 
+void	update_state(t_lexer_state *state, size_t i)
+{
+	state->is_word = TRUE;
+	state->curr = i;
+}
+
 void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 {
 	size_t			i;
-	static size_t	quote_counter;
+	static size_t	count;
 
 	token_lst->head = NULL;
-	quote_counter = count_quote(input);
+	count = count_quote(input);
 	i = 0;
 	while (i <= ft_strlen(input))
 	{
-		state->is_quoted = get_quote_state(input, i, state->is_quoted, &quote_counter);
+		state->is_quoted = get_state(input, i, state->is_quoted, &count);
 		if ((is_metachar(input[i]) || input[i] == '\0')
 			&& (state->is_word && !state->is_quoted))
 		{
@@ -115,10 +121,7 @@ void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state)
 		else if (is_operator(input[i]) && !state->is_word)
 			queue_token(token_lst, new_token(NULL, get_label(input, i)));
 		if (!(is_metachar(input[i])) && !state->is_word && input[i] != '\0')
-		{
-			state->is_word = TRUE;
-			state->curr = i;
-		}
+			update_state(state, i);
 		i++;
 	}
 }
