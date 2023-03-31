@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/22 20:52:02 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 19:14:29 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void	handle_execution(t_tokenl *token_lst, t_envl *env_lst)
 		else
 			ft_last(argv, envp, env_lst, &prevpipe);
 		dup2(bkp_stdout, STDOUT_FILENO);
-		free(argv);
 		deep_free(envp);
+		deep_free(argv);
 	}
 }

@@ -6,11 +6,16 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 17:02:45 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/29 18:59:42 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 18:02:55 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_valid_key(int c)
+{
+	return (ft_isalnum(c) || c == '?');
+}
 
 char	**get_keys(char *content)
 {
@@ -33,7 +38,7 @@ char	**get_keys(char *content)
 				|| ((state.prevent_default && state.prevent_expand == TRUE)
 					&& content[0] == '\"')))
 			handle_key(content, key, &i, &is_key);
-		else if (!ft_isalnum(content[i.old]) && is_key == TRUE)
+		else if (!is_valid_key(content[i.old]) && is_key == TRUE)
 			save_switch(content, key, &i, &is_key);
 		i.old++;
 	}

@@ -6,11 +6,24 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 17:14:05 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/29 22:56:41 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 18:41:49 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_keys(char **keys)
+{
+	size_t	i;
+
+	i = 0;
+	while (keys[i])
+	{
+		free(keys[i]);
+		i++;
+	}
+	free(keys);
+}
 
 char	*parse_content(char *content, t_envl *env_lst)
 {
@@ -36,6 +49,7 @@ char	*parse_content(char *content, t_envl *env_lst)
 		else
 			copy_char(state.new, content, &i);
 	}
+	free_keys(state.keys);
 	state.new[i.new] = '\0';
 	return (state.new);
 }
