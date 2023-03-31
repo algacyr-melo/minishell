@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 16:40:36 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/29 18:56:29 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 15:44:32 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,18 @@ void	expand_variable(t_envl *env_lst, char *key, char *new, t_index *i)
 	t_env	*tmp;
 
 	tmp = get_env(env_lst, key);
-	ft_memcpy(&new[i->new], tmp->value, ft_strlen(tmp->value) + 1);
-	i->old += ft_strlen(tmp->key) + 1;
-	i->new += ft_strlen(tmp->value);
+	if (tmp)
+	{
+		ft_memcpy(&new[i->new], tmp->value, ft_strlen(tmp->value) + 1);
+		i->old += ft_strlen(tmp->key) + 1;
+		i->new += ft_strlen(tmp->value);
+	}
+	else
+	{
+		ft_memcpy(&new[i->new], "$", 1 + 1);
+		i->old++;
+		i->new++;
+		ft_memcpy(&new[i->new], key, ft_strlen(key) + 1);
+	}
 	i->key++;
 }
