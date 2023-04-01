@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/31 23:04:52 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 23:09:28 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,13 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 {
 	int	fd_infile;
 
-	free(dequeue_token(token_lst));
-	fd_infile = open(token_lst->head->content, O_RDONLY);
-	free(dequeue_token(token_lst));
-	dup2(fd_infile, prevpipe);
+	while (token_lst->head && token_lst->head->label == IN)
+	{
+		free(dequeue_token(token_lst));
+		fd_infile = open(token_lst->head->content, O_RDONLY);
+		free(dequeue_token(token_lst));
+		dup2(fd_infile, prevpipe);
+	}
 }
 
 int	handle_redirect_out(t_tokenl *token_lst)
