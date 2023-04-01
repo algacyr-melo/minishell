@@ -12,13 +12,15 @@ SRC		= main.c \
 		  utils.c \
 		  init_parser_state.c \
 		  update_parser_state.c \
+		  handle_builtin.c \
 		  handle_execution.c \
+		  handle_redirect.c \
+		  handle_pipe.c \
 		  get_next_argv.c \
 		  list_to_envp.c \
 		  get_pathname.c \
 		  get_env.c \
 		  list_free.c \
-		  handle_builtin.c \
 		  echo.c \
 		  cd.c \
 		  pwd.c \
