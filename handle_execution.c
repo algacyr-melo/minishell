@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:54:04 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/31 22:49:48 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 23:04:52 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,13 +130,16 @@ int	handle_append(t_tokenl *token_lst)
 	int	outfile;
 	int	bkp;
 
-	free(dequeue_token(token_lst));
-	free(dequeue_token(token_lst));
-	outfile = open(token_lst->head->content, O_WRONLY | O_APPEND);
-	free(dequeue_token(token_lst));
 	bkp = dup(STDOUT_FILENO);
-	dup2(outfile, STDOUT_FILENO);
-	close(outfile);
+	while (token_lst->head && token_lst->head->label == APPEND)
+	{
+		free(dequeue_token(token_lst));
+		free(dequeue_token(token_lst));
+		outfile = open(token_lst->head->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		free(dequeue_token(token_lst));
+		dup2(outfile, STDOUT_FILENO);
+		close(outfile);
+	}
 	return (bkp);
 }
 
