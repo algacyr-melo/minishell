@@ -6,11 +6,21 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 16:56:16 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/29 18:17:27 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 23:51:13 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_operator(int c)
+{
+	return (c == '|' || c == '<' || c == '>');
+}
+
+int	is_metachar(int c)
+{
+	return (ft_isspace(c) || is_operator(c));
+}
 
 int	is_quote(int c)
 {

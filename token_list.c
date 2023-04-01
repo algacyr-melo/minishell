@@ -6,21 +6,11 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:40:12 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/30 15:14:05 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 23:53:05 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	is_operator(int c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-static int	is_metachar(int c)
-{
-	return (ft_isspace(c) || is_operator(c));
-}
 
 static enum e_label	get_label(char *input, size_t i)
 {
@@ -64,7 +54,7 @@ enum e_bool	get_state(char *input, int i, enum e_bool is_quoted, size_t *count)
 	return (is_quoted);
 }
 
-size_t	count_quote(char *input)
+static size_t	count_quote(char *input)
 {
 	size_t		counter;
 	size_t		i;
@@ -92,7 +82,7 @@ size_t	count_quote(char *input)
 	return (counter);
 }
 
-void	update_state(t_lexer_state *state, size_t i)
+static void	update_state(t_lexer_state *state, size_t i)
 {
 	state->is_word = TRUE;
 	state->curr = i;

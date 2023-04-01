@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/31 23:47:18 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/31 23:51:55 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,10 @@ int		get_argc(char **argv);
 void	free_token_list(t_tokenl *token_lst);
 void	free_env_list(t_envl *env_lst);
 
-void	init_index(t_index *i);
 int		is_quote(int c);
+int		is_operator(int c);
+int		is_metachar(int c);
+void	init_index(t_index *i);
 void	copy_quote(char *new, char *content, t_index *i);
 void	copy_char(char *new, char *content, t_index *i);
 void	ft_strcpy(char *dst, char *src);
