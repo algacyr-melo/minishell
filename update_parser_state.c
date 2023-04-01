@@ -1,40 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   update_parser_state.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/07 17:45:47 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/20 22:07:01 by dioda-si         ###   ########.fr       */
+/*   Created: 2023/03/29 16:45:42 by almelo            #+#    #+#             */
+/*   Updated: 2023/03/29 23:04:34 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	echo(int argc, char **argv)
+void	update_parser_state(char *content, size_t i, t_parser_state *state)
 {
-	size_t		i;
-	enum e_bool	end_nl;
-
-	end_nl = TRUE;
-	if (argc > 1)
+	if (content[i] == content[0])
 	{
-		i = 1;
-		if (ft_strcmp(argv[i], "-n") == 0)
-		{
-			end_nl = FALSE;
-			i++;
-		}
-		while (argv[i])
-		{
-			ft_putstr_fd(argv[i], STDOUT_FILENO);
-			if (argv[i + 1])
-				ft_putchar_fd(' ', STDOUT_FILENO);
-			i++;
-		}
+		if (state->prevent_default == FALSE)
+			state->prevent_default = TRUE;
+		else
+			state->prevent_default = FALSE;
 	}
-	if (end_nl == TRUE)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	exit(0);
+	if (content[i] == '\'')
+	{
+		if (state->prevent_expand == FALSE)
+			state->prevent_expand = TRUE;
+		else
+			state->prevent_expand = FALSE;
+	}
 }

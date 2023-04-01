@@ -6,15 +6,15 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:11:01 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/17 13:43:54 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 21:51:21 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int get_argc(char **argv)
+int	get_argc(char **argv)
 {
-	size_t  argc;
+	size_t	argc;
 
 	argc = 0;
 	while (argv[argc])
@@ -24,7 +24,7 @@ int get_argc(char **argv)
 
 t_envl	*handle_builtin_pp(char **argv, char **envp, t_envl *env_lst)
 {
-	int argc;
+	int	argc;
 
 	argc = get_argc(argv);
 	if (ft_strcmp(argv[0], "export") == 0)
@@ -40,7 +40,7 @@ t_envl	*handle_builtin_pp(char **argv, char **envp, t_envl *env_lst)
 
 int	handle_builtin_cp(char **argv, char **envp)
 {
-	int argc;
+	int	argc;
 
 	argc = get_argc(argv);
 	if (ft_strcmp(argv[0], "echo") == 0)

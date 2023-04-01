@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:50:50 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/11 17:13:45 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/28 20:15:13 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,38 @@ typedef struct s_envl
 {
 	t_env	*head;
 	t_env	*tail;
-	t_env	*path;
-	t_env	*home;
 	size_t	length;
 }			t_envl;
 
 typedef struct s_lexer_state
 {
-	char		*input_copy;
-	size_t		start;
+	char		*input;
+	size_t		curr;
 	enum e_bool	is_word;
 	enum e_bool	is_quoted;
 }				t_lexer_state;
+
+typedef struct s_parser_state
+{
+	char		**keys;
+	char		*new;
+	size_t		len_new;
+	enum e_bool	prevent_default;
+	enum e_bool	prevent_expand;
+}				t_parser_state;
+
+typedef struct s_index
+{
+	size_t	old;
+	size_t	new;
+	size_t	key;
+	size_t	start;
+}			t_index;
+
+typedef struct s_quote_state
+{
+	enum e_bool	prevent_default;
+	enum e_bool	prevent_expand;
+}				t_quote_state;
 
 #endif

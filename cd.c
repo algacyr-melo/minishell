@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:51:35 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/10 14:00:03 by almelo           ###   ########.fr       */
+/*   Updated: 2023/03/20 22:12:19 by dioda-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,31 @@ static void	set_pwd(t_envl *env_lst, t_env *pwd)
 	}
 }
 
-int cd(int argc, char **argv, t_envl *env_lst)
+int	cd(int argc, char **argv, t_envl *env_lst)
 {
-    char    *path;
+	char	*path;
 	t_env	*oldpwd;
 	t_env	*pwd;
 	t_env	*home;
 
 	oldpwd = get_env(env_lst, "OLDPWD");
 	set_oldpwd(env_lst, oldpwd);
-    if (argc == 1)
+	if (argc == 1)
 	{
-        home = get_env(env_lst, "HOME");
+		home = get_env(env_lst, "HOME");
 		if (home)
 			path = home->value;
 		else
 			return (1);
 	}
-    else
-        path = argv[1];
-    if (chdir(path) == -1)
-    {
-        printf("minishell: cd: %s: %s\n", argv[1], strerror(errno));
-        return (errno);
-    }
+	else
+	path = argv[1];
+	if (chdir(path) == -1)
+	{
+		printf("minishell: cd: %s: %s\n", argv[1], strerror(errno));
+		return (errno);
+	}
 	pwd = get_env(env_lst, "PWD");
 	set_pwd(env_lst, pwd);
-    return (0);
+	return (0);
 }

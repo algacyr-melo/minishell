@@ -1,40 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/07 17:45:47 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/20 22:07:01 by dioda-si         ###   ########.fr       */
+/*   Created: 2023/03/29 16:56:16 by almelo            #+#    #+#             */
+/*   Updated: 2023/03/31 23:51:13 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	echo(int argc, char **argv)
+int	is_operator(int c)
 {
-	size_t		i;
-	enum e_bool	end_nl;
+	return (c == '|' || c == '<' || c == '>');
+}
 
-	end_nl = TRUE;
-	if (argc > 1)
-	{
-		i = 1;
-		if (ft_strcmp(argv[i], "-n") == 0)
-		{
-			end_nl = FALSE;
-			i++;
-		}
-		while (argv[i])
-		{
-			ft_putstr_fd(argv[i], STDOUT_FILENO);
-			if (argv[i + 1])
-				ft_putchar_fd(' ', STDOUT_FILENO);
-			i++;
-		}
-	}
-	if (end_nl == TRUE)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	exit(0);
+int	is_metachar(int c)
+{
+	return (ft_isspace(c) || is_operator(c));
+}
+
+int	is_quote(int c)
+{
+	return (c == '\"' || c == '\'');
+}
+
+void	init_index(t_index *i)
+{
+	i->key = 0;
+	i->new = 0;
+	i->old = 0;
+	i->start = 0;
+}
+
+void	copy_char(char *new_content, char *content, t_index *i)
+{
+	new_content[i->new] = content[i->old];
+	i->new++;
+	i->old++;
 }
