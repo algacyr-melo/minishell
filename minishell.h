@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/31 23:51:55 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/01 18:26:58 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ char	*get_value(char *env_str);
 void	tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state);
 
 void	parse_tokens(t_tokenl *token_lst, t_envl *env_lst);
+char	*parse_content(char *content, t_envl *env_lst);
 void	init_parser_state(t_parser_state *state, char *content, t_envl *envlst);
 void	update_parser_state(char *content, size_t i, t_parser_state *state);
 size_t	count_keys(char *content);
@@ -58,7 +59,7 @@ void	init_quote_state(t_quote_state *state);
 void	update_quote_state(char *content, t_index *i, t_quote_state *state);
 void	expand_variable(t_envl *env_lst, char *key, char *new, t_index *i);
 
-int		handle_redirect(t_tokenl *token_lst, int *prevpipe);
+int		handle_redirect(t_tokenl *token_lst, t_envl *env_lst, int *prevpipe);
 void	ft_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe);
 void	ft_last(char **argv, char **envp, t_envl *env_lst, int *prevpipe);
 

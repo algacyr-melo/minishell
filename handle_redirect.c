@@ -6,24 +6,11 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/31 23:40:34 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/01 19:44:46 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
-{
-	int	fd_infile;
-
-	while (token_lst->head && token_lst->head->label == IN)
-	{
-		free(dequeue_token(token_lst));
-		fd_infile = open(token_lst->head->content, O_RDONLY);
-		free(dequeue_token(token_lst));
-		dup2(fd_infile, prevpipe);
-	}
-}
 
 int	handle_redirect_out(t_tokenl *token_lst)
 {
@@ -64,7 +51,50 @@ int	handle_append(t_tokenl *token_lst)
 	return (bkp);
 }
 
-int	handle_redirect(t_tokenl *token_lst, int *prevpipe)
+void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
+{
+	int	fd_infile;
+
+	while (token_lst->head && token_lst->head->label == IN)
+	{
+		free(dequeue_token(token_lst));
+		fd_infile = open(token_lst->head->content, O_RDONLY);
+		free(dequeue_token(token_lst));
+		dup2(fd_infile, prevpipe);
+	}
+}
+
+void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
+{
+	char	*input;
+	//char	*tmp;
+	char	*delimiter;
+	int		pipefd[2];
+
+	(void)env_lst;
+	free(dequeue_token(token_lst));
+	free(dequeue_token(token_lst));
+	delimiter = token_lst->head->content;
+	pipe(pipefd);
+	while (42)
+	{
+		input = readline("> ");
+		if (ft_strcmp(input, delimiter) == 0)
+		{
+			free(input);
+			exit(0) ;
+		}
+		//tmp = parse_content(input, env_lst);
+		ft_putendl_fd(input, pipefd[1]);
+		free(input);
+	}
+	dup2(pipefd[0], prevpipe);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	free(dequeue_token(token_lst));
+}
+
+int	handle_redirect(t_tokenl *token_lst, t_envl *env_lst, int *prevpipe)
 {
 	int	bkp_stdout;
 
@@ -75,5 +105,7 @@ int	handle_redirect(t_tokenl *token_lst, int *prevpipe)
 		bkp_stdout = handle_redirect_out(token_lst);
 	else if (token_lst->head->label == APPEND)
 		bkp_stdout = handle_append(token_lst);
+	else if (token_lst->head->label == HEREDOC)
+		handle_heredoc(token_lst, env_lst, *prevpipe);
 	return (bkp_stdout);
 }
