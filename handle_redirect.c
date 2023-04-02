@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/01 20:07:16 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/02 16:13:50 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	handle_redirect_out(t_tokenl *token_lst)
 	{
 		free(dequeue_token(token_lst));
 		head = token_lst->head;
-		outfile = open(head->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		outfile = open(head->content, O_TRUNC | O_CREAT | O_WRONLY, 0666);
+		free(head->content);
 		free(dequeue_token(token_lst));
 		dup2(outfile, STDOUT_FILENO);
 		close(outfile);
@@ -43,7 +44,8 @@ int	handle_append(t_tokenl *token_lst)
 		free(dequeue_token(token_lst));
 		free(dequeue_token(token_lst));
 		head = token_lst->head;
-		outfile = open(head->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		outfile = open(head->content, O_APPEND | O_CREAT | O_WRONLY, 0666);
+		free(head->content);
 		free(dequeue_token(token_lst));
 		dup2(outfile, STDOUT_FILENO);
 		close(outfile);
@@ -53,21 +55,25 @@ int	handle_append(t_tokenl *token_lst)
 
 void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 {
-	int	fd_infile;
+	int		infile;
+	t_token	*head;
 
 	while (token_lst->head && token_lst->head->label == IN)
 	{
 		free(dequeue_token(token_lst));
-		fd_infile = open(token_lst->head->content, O_RDONLY);
+		head = token_lst->head;
+		infile = open(head->content, O_RDONLY);
+		free(head->content);
 		free(dequeue_token(token_lst));
-		dup2(fd_infile, prevpipe);
+		dup2(infile, prevpipe);
+		close(infile);
 	}
 }
 
 void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 {
-	char	*input;
 	//char	*tmp;
+	char	*input;
 	char	*delimiter;
 	int		pipefd[2];
 	pid_t	pid;
@@ -86,6 +92,7 @@ void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 			if (ft_strcmp(input, delimiter) == 0)
 			{
 				free(input);
+				free(delimiter);
 				exit(0);
 			}
 			//tmp = parse_content(input, env_lst);
