@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/01 19:44:46 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/01 20:07:16 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,27 +70,36 @@ void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 	//char	*tmp;
 	char	*delimiter;
 	int		pipefd[2];
+	pid_t	pid;
 
 	(void)env_lst;
 	free(dequeue_token(token_lst));
 	free(dequeue_token(token_lst));
 	delimiter = token_lst->head->content;
 	pipe(pipefd);
-	while (42)
+	pid = fork();
+	if (pid == 0)
 	{
-		input = readline("> ");
-		if (ft_strcmp(input, delimiter) == 0)
+		while (42)
 		{
+			input = readline("> ");
+			if (ft_strcmp(input, delimiter) == 0)
+			{
+				free(input);
+				exit(0);
+			}
+			//tmp = parse_content(input, env_lst);
+			ft_putendl_fd(input, pipefd[1]);
 			free(input);
-			exit(0) ;
 		}
-		//tmp = parse_content(input, env_lst);
-		ft_putendl_fd(input, pipefd[1]);
-		free(input);
 	}
-	dup2(pipefd[0], prevpipe);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	else
+	{
+		wait(NULL);
+		dup2(pipefd[0], prevpipe);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
 	free(dequeue_token(token_lst));
 }
 
