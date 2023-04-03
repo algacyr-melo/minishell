@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 15:43:30 by almelo            #+#    #+#             */
-/*   Updated: 2023/02/25 16:21:32 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/03 18:07:46 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 static void	sigint_handler(int signo)
 {
 	(void)signo;
-	ft_putchar_fd('\n', STDOUT_FILENO);
+	if (g_exit_status == 0)
+	{
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		rl_on_new_line();
+	}
 	rl_replace_line("", 0);
-	rl_on_new_line();
 	rl_redisplay();
 }
 

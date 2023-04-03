@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/31 19:02:13 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/03 18:03:30 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	handle_exit(t_envl *env_lst, int status)
 	exit(status);
 }
 
-int	g_exit_status;
-
 void	handle_exit_status(t_envl *env_lst)
 {
 	t_env	*tmp;
@@ -41,6 +39,7 @@ void	handle_exit_status(t_envl *env_lst)
 	}
 	else
 		queue_env(env_lst, new_env(ft_strdup("?"), ft_strdup("0")));
+	g_exit_status = 0;
 }
 
 int	main(int argc, char **argv, char **envp)

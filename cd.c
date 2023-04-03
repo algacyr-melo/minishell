@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 17:51:35 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/20 22:12:19 by dioda-si         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:36:18 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	cd(int argc, char **argv, t_envl *env_lst)
 			return (1);
 	}
 	else
-	path = argv[1];
+		path = argv[1];
 	if (chdir(path) == -1)
 	{
 		printf("minishell: cd: %s: %s\n", argv[1], strerror(errno));

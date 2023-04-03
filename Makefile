@@ -28,6 +28,7 @@ SRC		= main.c \
 		  unset.c \
 		  env.c \
 		  exit.c \
+		  global.c \
 
 OBJ		= $(SRC:.c=.o)
 

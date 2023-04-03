@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/02 16:13:50 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/03 17:12:46 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,11 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 		free(dequeue_token(token_lst));
 		head = token_lst->head;
 		infile = open(head->content, O_RDONLY);
+		if (infile == -1)
+		{
+			printf("minishell: %s: %s\n", (char *)head->content, strerror(errno));
+			g_exit_status = errno;
+		}
 		free(head->content);
 		free(dequeue_token(token_lst));
 		dup2(infile, prevpipe);
@@ -72,7 +77,6 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 
 void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 {
-	//char	*tmp;
 	char	*input;
 	char	*delimiter;
 	int		pipefd[2];
@@ -95,7 +99,6 @@ void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 				free(delimiter);
 				exit(0);
 			}
-			//tmp = parse_content(input, env_lst);
 			ft_putendl_fd(input, pipefd[1]);
 			free(input);
 		}
