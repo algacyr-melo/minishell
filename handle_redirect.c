@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/03 17:12:46 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/04 14:31:57 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,19 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 	{
 		free(dequeue_token(token_lst));
 		head = token_lst->head;
-		infile = open(head->content, O_RDONLY);
-		if (infile == -1)
+		if (access(head->content, F_OK) == -1)
 		{
 			printf("minishell: %s: %s\n", (char *)head->content, strerror(errno));
 			g_exit_status = errno;
 		}
+		else
+		{
+			infile = open(head->content, O_RDONLY);
+			dup2(infile, prevpipe);
+			close(infile);
+		}
 		free(head->content);
 		free(dequeue_token(token_lst));
-		dup2(infile, prevpipe);
-		close(infile);
 	}
 }
 
