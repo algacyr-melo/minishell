@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/03 16:10:39 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/03 20:10:38 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char		*get_value(char *env_str);
 
 void		tokenize_input(t_tokenl *token_lst, char *input, t_lexer_state *state);
 
-void		parse_tokens(t_tokenl *token_lst, t_envl *env_lst);
+int			parse_tokens(t_tokenl *token_lst, t_envl *env_lst);
 char		*parse_content(char *content, t_envl *env_lst);
 void		init_parser_state(t_parser_state *state, char *content, t_envl *envlst);
 void		update_parser_state(char *content, size_t i, t_parser_state *state);
