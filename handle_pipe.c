@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:45:23 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/04 15:10:55 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/05 23:59:59 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,24 +78,20 @@ void	ft_last(char **argv, char **envp, t_envl *env_lst, int *prevpipe)
 	pid_t	pid;
 	int		status;
 
-	if (g_exit_status == 0)
+	pid = fork();
+	if (pid == 0)
 	{
-		pid = fork();
-		if (pid == 0)
-		{
-			dup2(*prevpipe, STDIN_FILENO);
-			close(*prevpipe);
+		dup2(*prevpipe, STDIN_FILENO);
+		close(*prevpipe);
+		if (g_exit_status == 0)
 			try_execute(argv, envp, env_lst);
-			exit(g_exit_status);
-		}
-		else
-		{
-			close(*prevpipe);
-			while (wait(&status) != -1)
-				;
-		}
-		g_exit_status = WEXITSTATUS(status);
+		exit(g_exit_status);
 	}
 	else
-		kill(0, SIGINT);
+	{
+		close(*prevpipe);
+		while (wait(&status) != -1)
+			;
+	}
+	g_exit_status = WEXITSTATUS(status);
 }

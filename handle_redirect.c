@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/04 14:31:57 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/06 00:03:23 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 	}
 }
 
-void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
+void	handle_heredoc(t_tokenl *token_lst, int prevpipe)
 {
 	char	*input;
 	char	*delimiter;
 	int		pipefd[2];
 	pid_t	pid;
+	int		status;
 
-	(void)env_lst;
 	free(dequeue_token(token_lst));
 	free(dequeue_token(token_lst));
 	delimiter = token_lst->head->content;
@@ -93,13 +93,16 @@ void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 	pid = fork();
 	if (pid == 0)
 	{
+		set_signal_handler_child();
+		close(pipefd[0]);
 		while (42)
 		{
 			input = readline("> ");
-			if (ft_strcmp(input, delimiter) == 0)
+			if ((input == NULL) || (ft_strcmp(input, delimiter) == 0))
 			{
+				if (input == NULL)
+					printf("minishell: warning: heredoc delimited by EOF (wanted `%s')\n", delimiter);
 				free(input);
-				free(delimiter);
 				exit(0);
 			}
 			ft_putendl_fd(input, pipefd[1]);
@@ -108,15 +111,22 @@ void	handle_heredoc(t_tokenl *token_lst, t_envl *env_lst, int prevpipe)
 	}
 	else
 	{
-		wait(NULL);
+		close(pipefd[1]);
+		wait(&status);
 		dup2(pipefd[0], prevpipe);
 		close(pipefd[0]);
-		close(pipefd[1]);
+		g_exit_status = WEXITSTATUS(status);
+		if (WIFSIGNALED(status))
+		{
+			rl_on_new_line();
+			rl_replace_line("", 0);
+		}
 	}
 	free(dequeue_token(token_lst));
+	free(delimiter);
 }
 
-int	handle_redirect(t_tokenl *token_lst, t_envl *env_lst, int *prevpipe)
+int	handle_redirect(t_tokenl *token_lst, int *prevpipe)
 {
 	int	bkp_stdout;
 
@@ -128,6 +138,6 @@ int	handle_redirect(t_tokenl *token_lst, t_envl *env_lst, int *prevpipe)
 	else if (token_lst->head->label == APPEND)
 		bkp_stdout = handle_append(token_lst);
 	else if (token_lst->head->label == HEREDOC)
-		handle_heredoc(token_lst, env_lst, *prevpipe);
+		handle_heredoc(token_lst, *prevpipe);
 	return (bkp_stdout);
 }

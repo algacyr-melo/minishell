@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:23:55 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/03 20:10:38 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/05 17:29:31 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@
 # include "libft/header/libft.h"
 
 extern int	g_exit_status;
-void		set_signal_handler(void);
+void		set_signal_handler_parent(void);
+void		set_signal_handler_child(void);
 
 t_token		*new_token(void *content, enum e_label label);
 void		queue_token(t_tokenl *token_lst, t_token *new);
@@ -60,7 +61,7 @@ void		init_quote_state(t_quote_state *state);
 void		update_quote_state(char *content, t_index *i, t_quote_state *state);
 void		expand_variable(t_envl *env_lst, char *key, char *new, t_index *i);
 
-int			handle_redirect(t_tokenl *token_lst, t_envl *env_lst, int *prevpipe);
+int			handle_redirect(t_tokenl *token_lst, int *prevpipe);
 void		ft_pipe(char **argv, char **envp, t_envl *env_lst, int *prevpipe);
 void		ft_last(char **argv, char **envp, t_envl *env_lst, int *prevpipe);
 

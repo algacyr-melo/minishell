@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 23:15:15 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/03 20:14:02 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/05 14:51:21 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	set_signal_handler();
+	set_signal_handler_parent();
 	create_env_list(&env_lst, envp);
 	while (42)
 	{
