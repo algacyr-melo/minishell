@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:34:03 by almelo            #+#    #+#             */
-/*   Updated: 2023/04/06 00:03:23 by almelo           ###   ########.fr       */
+/*   Updated: 2023/04/06 14:34:30 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ int	handle_append(t_tokenl *token_lst)
 	return (bkp);
 }
 
+static void	handle_error(char *content)
+{
+	printf("minishell: %s: %s\n", content, strerror(errno));
+	g_exit_status = errno;
+}
+
 void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 {
 	int		infile;
@@ -63,10 +69,7 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 		free(dequeue_token(token_lst));
 		head = token_lst->head;
 		if (access(head->content, F_OK) == -1)
-		{
-			printf("minishell: %s: %s\n", (char *)head->content, strerror(errno));
-			g_exit_status = errno;
-		}
+			handle_error((char *)head->content);
 		else
 		{
 			infile = open(head->content, O_RDONLY);
@@ -76,54 +79,6 @@ void	handle_redirect_in(t_tokenl *token_lst, int prevpipe)
 		free(head->content);
 		free(dequeue_token(token_lst));
 	}
-}
-
-void	handle_heredoc(t_tokenl *token_lst, int prevpipe)
-{
-	char	*input;
-	char	*delimiter;
-	int		pipefd[2];
-	pid_t	pid;
-	int		status;
-
-	free(dequeue_token(token_lst));
-	free(dequeue_token(token_lst));
-	delimiter = token_lst->head->content;
-	pipe(pipefd);
-	pid = fork();
-	if (pid == 0)
-	{
-		set_signal_handler_child();
-		close(pipefd[0]);
-		while (42)
-		{
-			input = readline("> ");
-			if ((input == NULL) || (ft_strcmp(input, delimiter) == 0))
-			{
-				if (input == NULL)
-					printf("minishell: warning: heredoc delimited by EOF (wanted `%s')\n", delimiter);
-				free(input);
-				exit(0);
-			}
-			ft_putendl_fd(input, pipefd[1]);
-			free(input);
-		}
-	}
-	else
-	{
-		close(pipefd[1]);
-		wait(&status);
-		dup2(pipefd[0], prevpipe);
-		close(pipefd[0]);
-		g_exit_status = WEXITSTATUS(status);
-		if (WIFSIGNALED(status))
-		{
-			rl_on_new_line();
-			rl_replace_line("", 0);
-		}
-	}
-	free(dequeue_token(token_lst));
-	free(delimiter);
 }
 
 int	handle_redirect(t_tokenl *token_lst, int *prevpipe)
