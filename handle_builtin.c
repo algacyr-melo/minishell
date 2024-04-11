@@ -6,7 +6,7 @@
 /*   By: almelo <almelo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 18:11:01 by almelo            #+#    #+#             */
-/*   Updated: 2023/03/20 21:51:21 by dioda-si         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:33:52 by almelo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_envl	*handle_builtin_pp(char **argv, char **envp, t_envl *env_lst)
 	else if (ft_strcmp(argv[0], "exit") == 0)
 		ft_exit(argc, argv);
 	else if (ft_strcmp(argv[0], "cd") == 0)
-		cd(argc, argv, env_lst);
+		g_exit_status = cd(argc, argv, env_lst);
 	return (env_lst);
 }
 

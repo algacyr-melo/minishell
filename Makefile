@@ -6,6 +6,7 @@ SRC		= main.c \
 		  env_list.c \
 		  token_queue.c \
 		  token_list.c \
+		  check_syntax.c \
 		  parse_tokens.c \
 		  parser_quote.c \
 		  parser_expand.c \
@@ -14,7 +15,9 @@ SRC		= main.c \
 		  update_parser_state.c \
 		  handle_builtin.c \
 		  handle_execution.c \
+		  execution.c \
 		  handle_redirect.c \
+		  heredoc.c \
 		  handle_pipe.c \
 		  get_next_argv.c \
 		  list_to_envp.c \
@@ -28,6 +31,7 @@ SRC		= main.c \
 		  unset.c \
 		  env.c \
 		  exit.c \
+		  global.c \
 
 OBJ		= $(SRC:.c=.o)
 
